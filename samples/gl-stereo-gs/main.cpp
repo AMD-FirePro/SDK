@@ -367,7 +367,7 @@ void SetUpMatrices()
 
 	left  = - ratio * wd2 - 0.5f * EYE_SEPARATION * ndfl;
 	right =   ratio * wd2 - 0.5f * EYE_SEPARATION * ndfl;
-	MV_P_System[3] = glm::frustum(left,right,bottom,top,Near,1000.0f);
+	MV_P_System[3] = glm::frustum(left,right,bottom,top,Near,1000.0f); 
 
 	for (int i=0;i<4;i++)
 		Pointer[i] = MV_P_System[i];
