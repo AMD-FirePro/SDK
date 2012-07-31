@@ -1,6 +1,6 @@
-#include "GLApp.h"
-#include "Utils.h"
-#include "RenderManager.h"
+#include "GLApp.hpp"
+#include "Utils.hpp"
+#include "RenderManager.hpp"
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -22,14 +22,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 /////////////////////////////////////////////////////////////////////////////////////////////
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	LONG user_data = GetWindowLong(hWnd, GWL_USERDATA);
+	LONG_PTR user_data = GetWindowLongPtr (hWnd, GWLP_USERDATA);
 	if (user_data == 0)
 	{
 		if (uMsg == WM_CREATE)
 		{
 			CREATESTRUCT * creation = reinterpret_cast<CREATESTRUCT *>(lParam);
 			GLApp * appl = reinterpret_cast<GLApp *>(creation->lpCreateParams);
-			SetWindowLong(hWnd, GWL_USERDATA, reinterpret_cast<LONG>(appl));
+			SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(appl));
 			appl->m_IsVisible = true;
 			return 0;
 		}
@@ -174,12 +174,12 @@ LRESULT GLApp::Message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 
 		case WM_KEYDOWN:
-			OnKeyDown(wParam);
+			OnKeyDown((unsigned int)wParam);
 			return 0;
 		break;
 
 		case WM_KEYUP:
-			OnKeyUp(wParam);
+			OnKeyUp((unsigned int)wParam);
 			return 0;
 		break;
 

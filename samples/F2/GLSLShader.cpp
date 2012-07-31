@@ -1,5 +1,5 @@
-#include "Utils.h"
-#include "GLSLShader.h"
+#include "utils.hpp"
+#include "glslshader.hpp"
 #include <fstream>
 
 // NEED To BE IN SYNC WITH enum shaderTemplate

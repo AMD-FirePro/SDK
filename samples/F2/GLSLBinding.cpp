@@ -1,5 +1,5 @@
-#include "Utils.h"
-#include "GLSLBinding.h"
+#include "utils.hpp"
+#include "glslbinding.hpp"
 
 #define MAX_UNIFORM_NAME_LEN 100
 
@@ -240,10 +240,10 @@ void GLSLBindings::BuildUniformRefs(GLhandleARB hProgram, GpuParams * params)
 		glGetActiveUniform(hProgram, index, MAX_UNIFORM_NAME_LEN, NULL, &size, &newUniformReference.mType, uniformName);
 
 		// ATI fix, remove array indices from the uniform name if it is an array
-		int len = strlen(uniformName);
+		std::size_t len = strlen(uniformName);
 		if (uniformName[len-1] == ']')	// cheap array detection
 		{
-			int i = len-2;
+			int i = int(len)-2;
 			while (i > 0)
 			{
 				if (uniformName[i] == '[')

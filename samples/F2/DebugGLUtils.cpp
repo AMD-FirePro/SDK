@@ -1,10 +1,8 @@
-
 #include <sstream>
 #include <fstream>
 #include <iostream>
 
-#include "Utils.h"
-
+#include "utils.hpp"
 
 //////////////////////////////////////////////////////////////////////
 bool CheckOglError(bool assert)

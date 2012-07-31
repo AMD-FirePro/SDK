@@ -1,6 +1,6 @@
-#include "Utils.h"
-#include "RenderManager.h"
-#include "RenderToTarget.h"
+#include "utils.hpp"
+#include "rendermanager.hpp"
+#include "rendertotarget.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // RenderToTarget

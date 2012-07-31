@@ -1,1 +1,1 @@
-createSample(F2)
+createSampleWGL(F2)

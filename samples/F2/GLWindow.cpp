@@ -1,7 +1,5 @@
-#include "GLWindow.h"
-
+#include "GLWindow.hpp"
 #include <gl/glew.h>
-
 
 GLWindow::GLWindow() :
 	m_WindowPosX(0),

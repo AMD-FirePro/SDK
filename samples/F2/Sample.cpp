@@ -1,10 +1,10 @@
-#include "Sample.h"
-#include "Utils.h"
-#include "RenderManager.h"
-#include "GLSLShader.h"
+#include "sample.hpp"
+#include "utils.hpp"
+#include "rendermanager.hpp"
+#include "glslshader.hpp"
 
-#include "assimp.h"
-#include "ModelAndTextureLoader.h"
+#include <assimp.h>
+#include "ModelAndTextureLoader.hpp"
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 GLApp * GLApp::Create(const char * class_name)

@@ -1,8 +1,8 @@
-#include "ModelAndTextureLoader.h"
+#include "ModelAndTextureLoader.hpp"
 #include <GL/glew.h>
 //#include <assimp\config.h>
 //#include <assimp\Importer.hpp>
-#include "assimp.h"
+#include <assimp.h>
 
 #include <gli/gli.hpp>
 #include <gli/gtx/loader.hpp>
@@ -155,7 +155,7 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 			}
 		}
 
-		int numTextures = m_textureIdMap.size();
+		int numTextures = int(m_textureIdMap.size());
 
 		std::map<std::string, GLuint*>::iterator itr = m_textureIdMap.begin();
 
@@ -251,7 +251,7 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 
 ModelAndTextureLoader::~ModelAndTextureLoader()
 {
-	glDeleteTextures(m_textureIdMap.size(),m_textureIds);
+	glDeleteTextures(int(m_textureIdMap.size()), m_textureIds);
 	if (m_textureIds) { delete[] m_textureIds; m_textureIds = NULL; }
 	if ( m_textureOfEachMaterial ) { delete[] m_textureOfEachMaterial; m_textureOfEachMaterial = NULL; }
 

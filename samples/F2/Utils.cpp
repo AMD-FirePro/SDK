@@ -1,5 +1,5 @@
-#include "GLApp.h"
-#include "Utils.h"
+#include "glapp.hpp"
+#include "utils.hpp"
 
 //////////////////////////////////////////////////////////////////////
 GLuint CreateTexture2D(const char * filename)

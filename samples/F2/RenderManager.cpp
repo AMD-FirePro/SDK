@@ -1,9 +1,8 @@
-#include "GLApp.h"
-#include "RenderManager.h"
-#include "RenderToTarget.h"
-
-#include "GLSLBinding.h"
-#include "GLSLShader.h"
+#include "GLApp.hpp"
+#include "RenderManager.hpp"
+#include "RenderToTarget.hpp"
+#include "GLSLBinding.hpp"
+#include "GLSLShader.hpp"
 
 //////////////////////////////////////////////////////////////////////////////////////
 RenderManager::RenderManager(GLApp * pApp)
@@ -639,8 +638,8 @@ bool RenderManager::BlurTarget(renderToTargetNature_e eRTTNature, int targetId, 
 	m_GpuParams->SetParam(UniformName::nbSample, blurLevel);
 	m_GpuParams->SetParam(UniformName::diffuse2D, 0);	// tex unit 0
 	m_GpuParams->SetParam(UniformName::textureSize, scale);
-	m_GpuParams->SetParam(UniformName::sampleOffsets, &(offsets[0][0]), 2, offsets.size());
-	m_GpuParams->SetParam(UniformName::sampleWeight, &(weights[0]), 1, weights.size());
+	m_GpuParams->SetParam(UniformName::sampleOffsets, &(offsets[0][0]), 2, int(offsets.size()));
+	m_GpuParams->SetParam(UniformName::sampleWeight, &(weights[0]), 1, int(weights.size()));
 
 	EnableShader(BlurPass);
 
@@ -664,8 +663,8 @@ bool RenderManager::BlurTarget(renderToTargetNature_e eRTTNature, int targetId, 
 
 	glBindTexture(GL_TEXTURE_2D, GetTexture(eRTTNature,targetTemp));	// bind previous texture
 	m_GpuParams->SetParam(UniformName::textureSize, scale);
-	m_GpuParams->SetParam(UniformName::sampleOffsets, &(offsets[0][0]), 2, offsets.size());
-	m_GpuParams->SetParam(UniformName::sampleWeight, &(weights[0]), 1, weights.size());
+	m_GpuParams->SetParam(UniformName::sampleOffsets, &(offsets[0][0]), 2, int(offsets.size()));
+	m_GpuParams->SetParam(UniformName::sampleWeight, &(weights[0]), 1, int(weights.size()));
 	UpdateCurrentShaderUniforms();
 
 	DrawScreenQuadDirectWithTex();
