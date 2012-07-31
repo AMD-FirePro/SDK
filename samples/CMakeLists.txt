@@ -1,5 +1,4 @@
 add_subdirectory(F2)
-add_subdirectory(gl-empty-window)
 add_subdirectory(gl-lighting)
 add_subdirectory(gl-multi-draw-indirect)
 add_subdirectory(gl-sparse-texture)

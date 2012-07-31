@@ -1,1 +1,0 @@
-createSample(gl-empty-window)
