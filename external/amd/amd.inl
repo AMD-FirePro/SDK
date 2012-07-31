@@ -11,6 +11,7 @@ void display();
 
 namespace amd
 {
+	bool isWireFrame=false;
 	inline void swapBuffers()
 	{
 		glutSwapBuffers();
@@ -334,6 +335,9 @@ namespace amd
 		case 27:
 			end();
 			exit(0);
+		case 'w':
+			isWireFrame=!isWireFrame;
+            break;
 		default:
 			++Window.KeyPressed[key];
 			break;
