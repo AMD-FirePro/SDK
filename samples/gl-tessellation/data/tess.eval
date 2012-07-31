@@ -97,10 +97,10 @@ void main()
 	}
 
 	vec3 pos, nor;
-	DeCasteljau_BICUBIC(gl_TessCoord, cps, pos, nor);
+	DeCasteljau_BICUBIC(gl_TessCoord.xy, cps, pos, nor);
 
 	gl_Position = matMVP * vec4(pos, 1.0);
 	Out.worldPosition = pos;
 	Out.worldNormal = normalize(nor);
-	Out.lightWorldPos = matView * vec4(pos, 1.0); // point light is at the camera position
+	Out.lightWorldPos = vec3(matView * vec4(pos, 1.0)); // point light is at the camera position
 }
