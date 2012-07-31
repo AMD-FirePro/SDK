@@ -1,11 +1,10 @@
 #pragma once
 
 // assimp include files. These three are usually needed.
-#include "../../../external/assimp/include/assimp.h"
-#include "../../../external/assimp/include/aiPostProcess.h"
-#include "../../../external/assimp/include/aiScene.h"
+#include <assimp.h>
+#include <aiPostProcess.h>
+#include <aiScene.h>
 //#include <GL/gl.h>
-#pragma comment(lib, "../../../external/assimp/assimp.lib")
 
 #define aisgl_min(x,y) (x<y?x:y)
 #define aisgl_max(x,y) (y>x?y:x)

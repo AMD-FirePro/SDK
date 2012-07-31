@@ -208,8 +208,8 @@ bool initVertexArray()
 	glGenVertexArrays(1, &VertexArrayModel);
     glBindVertexArray(VertexArrayModel);
 		glBindBuffer(GL_ARRAY_BUFFER, BufferName[buffer::VERTEX]);
-		glVertexAttribPointer(MySemantic::attr::IN_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(VERTEX_ELEMENT), GLF_BUFFER_OFFSET(0));
-		glVertexAttribPointer(MySemantic::attr::IN_TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(VERTEX_ELEMENT), GLF_BUFFER_OFFSET(sizeof(glm::vec3)));
+		glVertexAttribPointer(MySemantic::attr::IN_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(VERTEX_ELEMENT), AMD_BUFFER_OFFSET(0));
+		glVertexAttribPointer(MySemantic::attr::IN_TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(VERTEX_ELEMENT), AMD_BUFFER_OFFSET(sizeof(glm::vec3)));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glEnableVertexAttribArray(MySemantic::attr::IN_POSITION);
