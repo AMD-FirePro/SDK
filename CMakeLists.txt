@@ -112,6 +112,22 @@ elseif(UNIX)
 endif(WIN32)
 
 ################################
+# Add OpenCL
+
+if(MSVC AND NOT CMAKE_CL_64)
+	set(CL_BINARY_DIRECTORY "x86")
+endif(MSVC AND NOT CMAKE_CL_64)
+
+if(MSVC AND CMAKE_CL_64)
+	set(CL_BINARY_DIRECTORY "x86_64")
+endif(MSVC AND CMAKE_CL_64)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/opencl-1.2)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/opencl-1.2/lib/${CL_BINARY_DIRECTORY})
+
+set(CL_LIBRARY OpenCL)
+
+################################
 # Add libraries to executables
 
 if(APPLE)
@@ -184,6 +200,9 @@ function(createSampleWGL NAME)
 	add_custom_command(
 		TARGET ${NAME} POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/data ${CMAKE_CURRENT_BINARY_DIR}/data)
+	add_custom_command(
+		TARGET ${NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy ${ASSIMP_BINARY} ${CMAKE_CURRENT_BINARY_DIR})
 
 	target_link_libraries(${NAME} ${GL_LIBRARY} ${GLEW_LIBRARY} ${FREEGLUT_LIBRARY} ${ASSIMP_LIBRARY})
 endfunction(createSampleWGL)
