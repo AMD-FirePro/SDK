@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{5c86f125-56d3-4f85-9021-245ec1bd4a5b}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{0533ef00-6287-4976-9957-41fb693f6db7}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{de7725e2-c645-494d-ba26-bd7c88f6d5ef}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{ce72baa7-232f-4c57-ae58-82d9099ee965}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GLApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSLBinding.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSLShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderToTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sample.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugGLUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="glew.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelAndTextureLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GLApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSLBinding.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSLShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderToTarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UniformRefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelAndTextureLoader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\AppendClear.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\AppendClear.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\AppendResolve.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\AppendResolve.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\BlurPass.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\BlurPass.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\ComputeSSAO.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\ComputeSSAO.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\OutputNormal.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\OutputNormal.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\ShadowPass.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\UberShader.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\UberShader.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\QuadTex.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\QuadTex.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\ShadowPass.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\GlowPass.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\GlowPass.vert">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
