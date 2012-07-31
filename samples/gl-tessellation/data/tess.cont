@@ -1,0 +1,37 @@
+#version 420 core
+
+layout(vertices = 4) out;
+uniform vec4 center=vec4(0,0,0,1);
+uniform mat4 matView;
+
+in block
+{
+    vec3 Position0;
+	vec3 Position1;
+	vec3 Position2;
+	vec3 Position3;
+} In[];
+
+out block
+{
+    vec3 Position0;
+	vec3 Position1;
+	vec3 Position2;
+	vec3 Position3;
+} Out[];
+
+void main()
+{	
+    float edgeTF = clamp(100.0f/length(matView*center - center), 2, 16);
+    gl_TessLevelOuter[0] = edgeTF;
+	gl_TessLevelOuter[1] = edgeTF;
+	gl_TessLevelOuter[2] = edgeTF;
+	gl_TessLevelOuter[3] = edgeTF;
+	gl_TessLevelInner[0]=gl_TessLevelInner[1]=(gl_TessLevelOuter[0]+gl_TessLevelOuter[1]+gl_TessLevelOuter[2]+gl_TessLevelOuter[3])*0.25f;
+
+	Out[gl_InvocationID].Position0 = In[gl_InvocationID].Position0;
+	Out[gl_InvocationID].Position1 = In[gl_InvocationID].Position1;
+	Out[gl_InvocationID].Position2 = In[gl_InvocationID].Position2;
+	Out[gl_InvocationID].Position3 = In[gl_InvocationID].Position3;
+}
+
