@@ -1,8 +1,5 @@
-
-#include <glf/glf.hpp>
-
+#include <amd/amd.hpp>
 #include "ModelLoader2.h"
-
 
 namespace MySemantic
 {
@@ -28,8 +25,6 @@ namespace MySemantic
 		};
 	}
 }
-
-
 
 namespace
 {
@@ -93,9 +88,6 @@ namespace
 	GLuint oglTextureModelSpecular(0);
 
 	float rotateModel = 0.0f;
-
-
-
 }//namespace
 
 bool initProgram()
@@ -165,13 +157,8 @@ bool initTexture()
 		glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,TextureModelSpecular[0].dimensions().x,TextureModelSpecular[0].dimensions().y,0,GL_RGBA,GL_UNSIGNED_BYTE,TextureModelSpecular[0].data());
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-
 	return Validated;
 }
-
-
-
-
 
 bool initModels()
 {
@@ -209,11 +196,9 @@ bool initBuffer()
 
 bool initVertexArray(pSceneGeometry* SceneModel)
 {
-
 	if(!SceneModel)
 		return false;
 	//I know my model only have one mesh, which is built into one VBO ...
-
 
 	glGenVertexArrays(1, &VertexArrayModel);
 
@@ -246,7 +231,6 @@ bool initVertexArray(pSceneGeometry* SceneModel)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, SceneModel->children[0]->IBOID); 
 
 	glBindVertexArray(0);
-
   
 	return true;
 }

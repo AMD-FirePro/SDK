@@ -1,5 +1,4 @@
-
-#include <glf/glf.hpp>
+#include <amd/amd.hpp>
 
 namespace
 {
@@ -12,8 +11,6 @@ namespace
 	amd::window Window(glm::ivec2(SAMPLE_SIZE_WIDTH, SAMPLE_SIZE_HEIGHT));
 
 }//namespace
-
-
 
 bool initDebugOutput()
 {

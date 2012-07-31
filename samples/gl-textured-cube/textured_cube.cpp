@@ -1,6 +1,4 @@
-
-#include <glf/glf.hpp>
-
+#include <amd/amd.hpp>
 
 namespace MySemantic
 {
@@ -23,8 +21,6 @@ namespace MySemantic
 		};
 	}
 }
-
-
 
 namespace
 {
@@ -103,15 +99,12 @@ namespace
 		};
 	}//namespace buffer
 
-
-
 	//This struct must be the same that in the shader(s)
 	//be cafefull with padding if using other dimensions that mat4 and vec4
 	struct UPDATE_EACH_FRAME
 	{
 		glm::mat4 mMtoS;//matrix Model space to Screen space ( = matrix Model View Projection )
-	} ;
-
+	};
 
 	GLuint PipelineName(0);
 	GLuint ProgramName[program::MAX] = {0};
@@ -160,7 +153,6 @@ bool initProgram()
 	return Validated;
 }
 
-
 bool initTexture()
 {
 	bool Validated(true);
@@ -190,7 +182,6 @@ bool initDebugOutput()
 
 bool initBuffer()
 {
-
 	glGenBuffers(buffer::MAX, BufferName);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, BufferName[buffer::UNIFORM_UPDATE_EACH_FRAME]);
@@ -226,7 +217,6 @@ bool initVertexArray()
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, BufferName[buffer::ELEMENT]);
 	glBindVertexArray(0);
-
   
 	return Validated;
 }
@@ -255,7 +245,6 @@ bool begin()
 	if(Validated)
 		Validated = initVertexArray();
 
-
 	return Validated;
 }
 
@@ -273,12 +262,10 @@ bool end()
 	return Validated;
 }
 
-
 void display()
 {
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(true);
-
 	
 	// Update of the uniform buffer
 	{
@@ -287,8 +274,6 @@ void display()
 		UPDATE_EACH_FRAME* uniformBufferUpdatedEachFrame = (UPDATE_EACH_FRAME*)glMapBufferRange(
 			GL_UNIFORM_BUFFER, 0, sizeof(UPDATE_EACH_FRAME),
 			GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
-
-
 
 		float yScale = 1.0f / tanf(    (3.14f / 4.0f)   /2.0f);
 		float xScale = yScale / (Window.Size.x / Window.Size.y);
@@ -311,15 +296,12 @@ void display()
 		glm::mat4 Model = ModelRotate;
 		rotateModel += 0.001f;
 
-
 		uniformBufferUpdatedEachFrame->mMtoS = Projection * View * Model;
-
 
 		// Make sure the uniform buffer is uploaded
 		glUnmapBuffer(GL_UNIFORM_BUFFER);
 	}
 	
-
 	glViewportIndexedf(0, 0, 0, GLfloat(Window.Size.x), GLfloat(Window.Size.y));
 	glClearBufferfv(GL_COLOR, 0, &glm::vec4(0.7f, 0.8f, 1.0f, 1.0f)[0]);
 
@@ -327,8 +309,6 @@ void display()
 	glClearBufferfv(GL_DEPTH, 0, &clearDepthValue);
 	const GLint clearStencilValue = 0;
 	glClearBufferiv(GL_STENCIL, 0, &clearStencilValue);
-
-
 
 	// Bind rendering objects
 	glBindProgramPipeline(PipelineName);
