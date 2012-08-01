@@ -32,23 +32,23 @@ GLuint CreateTextureCube(const char * filename)
 	gli::gtx::gl_texture2d::detail::texture_desc TextureDesc = gli::gtx::gl_texture2d::detail::gli2ogl_cast(Texture.format());
 
 	for(std::size_t Face = 0; Face < 6; ++Face)
-		for(std::size_t Level = 0; Level < Texture.levels(); ++Level)
-		{
-			glCompressedTexImage2D(
-				GL_TEXTURE_CUBE_MAP_POSITIVE_X + Face,
-				GLint(Level),
-				TextureDesc.InternalFormat,
-				GLsizei(Texture[gli::textureCube::face_type(Face)][Level].dimensions().x), 
-				GLsizei(Texture[gli::textureCube::face_type(Face)][Level].dimensions().y), 
-				0, 
-				GLsizei(Texture[gli::textureCube::face_type(Face)][Level].capacity()), 
-				Texture[gli::textureCube::face_type(Face)][Level].data());
-		}
+	for(std::size_t Level = 0; Level < Texture.levels(); ++Level)
+	{
+		glCompressedTexImage2D(
+			GLenum(GL_TEXTURE_CUBE_MAP_POSITIVE_X + Face),
+			GLint(Level),
+			TextureDesc.InternalFormat,
+			GLsizei(Texture[gli::textureCube::face_type(Face)][Level].dimensions().x), 
+			GLsizei(Texture[gli::textureCube::face_type(Face)][Level].dimensions().y), 
+			0, 
+			GLsizei(Texture[gli::textureCube::face_type(Face)][Level].capacity()), 
+			Texture[gli::textureCube::face_type(Face)][Level].data());
+	}
 
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		glPixelStorei(GL_UNPACK_ALIGNMENT, Alignment);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, Alignment);
 
-		return tex;
+	return tex;
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -1,8 +1,5 @@
-
-#include <glf/glf.hpp>
-
-#include "ModelAndTextureLoader.h"
-
+#include <amd/amd.hpp>
+#include "ModelLoader2.h"
 
 namespace MySemantic
 {
@@ -88,9 +85,13 @@ namespace
 
 	GLuint BufferName[buffer::MAX] = {0};
 
+	GLuint oglTextureModelDiffuse(0);
+	GLuint oglTextureModelNormal(0);
+	GLuint oglTextureModelSpecular(0);
+
 	float rotateModel = 0.0f;
 
-	ModelAndTextureLoader* fullModel;
+
 
 }//namespace
 
@@ -130,11 +131,49 @@ bool initProgram()
 }
 
 
+bool initTexture()
+{
+	bool Validated(true);
+
+	gli::texture2D TextureModelDiffuse = gli::load(amd::DATA_DIRECTORY + "rocks.tga" );
+	glGenTextures(1, &oglTextureModelDiffuse);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, oglTextureModelDiffuse);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,TextureModelDiffuse[0].dimensions().x,TextureModelDiffuse[0].dimensions().y,0,GL_RGBA,GL_UNSIGNED_BYTE,TextureModelDiffuse[0].data());
+	glBindTexture(GL_TEXTURE_2D, 0);
+	
+	gli::texture2D TextureModelNormal = gli::load(amd::DATA_DIRECTORY + "rocks_NM_height.tga" );
+	glGenTextures(1, &oglTextureModelNormal);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, oglTextureModelNormal);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,TextureModelNormal[0].dimensions().x,TextureModelNormal[0].dimensions().y,0,GL_RGBA,GL_UNSIGNED_BYTE,TextureModelNormal[0].data());
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+
+	gli::texture2D TextureModelSpecular = gli::load(amd::DATA_DIRECTORY + "specular.tga" );
+	glGenTextures(1, &oglTextureModelSpecular);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, oglTextureModelSpecular);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,TextureModelSpecular[0].dimensions().x,TextureModelSpecular[0].dimensions().y,0,GL_RGBA,GL_UNSIGNED_BYTE,TextureModelSpecular[0].data());
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+
+	return Validated;
+}
+
+
+
+
+
 bool initModels()
 {
 	bool Validated(true);
 
-	fullModel = new ModelAndTextureLoader((amd::DATA_DIRECTORY+"teapot\\").c_str(),(amd::DATA_DIRECTORY +  "teapot\\teapot2.obj"  ).c_str()); 
+	loadasset((amd::DATA_DIRECTORY +  "teapot2.obj"  ).c_str());
+	recursive_meshGenerator(scene, scene->mRootNode, pCurrentScene);
 
 	return Validated;
 }
@@ -163,6 +202,50 @@ bool initBuffer()
 	return true;
 }
 
+bool initVertexArray(pSceneGeometry* SceneModel)
+{
+
+	if(!SceneModel)
+		return false;
+	//I know my model only have one mesh, which is built into one VBO ...
+
+
+	glGenVertexArrays(1, &VertexArrayModel);
+
+	glBindVertexArray(VertexArrayModel);
+		glBindBuffer(GL_ARRAY_BUFFER, SceneModel->children[0]->VBOID);
+			glVertexAttribPointer(MySemantic::attr::IN_POSITION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glEnableVertexAttribArray(MySemantic::attr::IN_POSITION);
+
+		glBindBuffer(GL_ARRAY_BUFFER, SceneModel->children[0]->VBOIDNormal);
+			glVertexAttribPointer(MySemantic::attr::IN_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glEnableVertexAttribArray(MySemantic::attr::IN_NORMAL);
+
+		glBindBuffer(GL_ARRAY_BUFFER, SceneModel->children[0]->VBOIDtextureCoor);
+			glVertexAttribPointer(MySemantic::attr::IN_TEXCOORD, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glEnableVertexAttribArray(MySemantic::attr::IN_TEXCOORD);
+
+		glBindBuffer(GL_ARRAY_BUFFER, SceneModel->children[0]->VBOIDtangent);
+			glVertexAttribPointer(MySemantic::attr::IN_TANGENT, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glEnableVertexAttribArray(MySemantic::attr::IN_TANGENT);
+
+		glBindBuffer(GL_ARRAY_BUFFER, SceneModel->children[0]->VBOIDbitangent);
+			glVertexAttribPointer(MySemantic::attr::IN_BITANGENT, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glEnableVertexAttribArray(MySemantic::attr::IN_BITANGENT);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, SceneModel->children[0]->IBOID); 
+
+	glBindVertexArray(0);
+
+  
+	return true;
+}
+
 bool begin()
 {
 	bool Validated(true);
@@ -177,11 +260,16 @@ bool begin()
 	if(Validated && amd::checkExtension("GL_ARB_debug_output"))
 		Validated = initDebugOutput();
 	if(Validated)
+		Validated = initTexture();
+	if(Validated)
 		Validated = initProgram();
 	if(Validated)
 		Validated = initBuffer();
 	if(Validated)
 		Validated = initModels();
+	if(Validated)
+		Validated = initVertexArray(pCurrentScene);
+
 
 	return Validated;
 }
@@ -190,52 +278,17 @@ bool end()
 {
 	bool Validated(true);
 
-	if ( fullModel ) { delete fullModel; fullModel = NULL; }
-
 	glDeleteProgramPipelines(1, &PipelineName);
 	glDeleteProgram(ProgramName[program::FRAGMENT_SHADER]);
 	glDeleteProgram(ProgramName[program::VERTEX_SHADER]);
 	glDeleteBuffers(buffer::MAX, BufferName);
+	glDeleteTextures(1, &oglTextureModelDiffuse);
+	glDeleteTextures(1, &oglTextureModelNormal);
+	glDeleteTextures(1, &oglTextureModelSpecular);
 	glDeleteVertexArrays(1, &VertexArrayModel);
 
 	return Validated;
 }
-
-
-
-void recursiveMeshRendering(const struct aiScene *sc, const struct aiNode* nd, unsigned int* currentMesh)
-{
-	// draw all meshes assigned to this node
-	for (unsigned int n = 0; n < nd->mNumMeshes; ++n)
-	{
-		const struct aiMesh* mesh = sc->mMeshes[nd->mMeshes[n]];
-
-	//apply material
-		const struct aiMaterial* material = sc->mMaterials[mesh->mMaterialIndex];
-
-		ModelAndTextureLoader::MATERIAL_TEXTUREID textureIDs = fullModel->GetGLtextureOfMaterial(mesh->mMaterialIndex);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textureIDs.idDiffuse);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, textureIDs.idNormal);		
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, textureIDs.idSpecular);		
-
-	//render mesh
-		glBindVertexArray(fullModel->GetMeshVertexArray(*currentMesh));
-		glDrawElements(GL_TRIANGLES, fullModel->GetNb3PointsFace(*currentMesh)*3, GL_UNSIGNED_INT, NULL);
-		(*currentMesh) ++;
-	}
-
-
-	// draw all children
-	for (unsigned int n = 0; n < nd->mNumChildren; ++n)
-	{
-		recursiveMeshRendering(sc, nd->mChildren[n],currentMesh);
-	}
-}
-
 
 
 void display()
@@ -288,7 +341,7 @@ void display()
 		uniformBufferUpdatedEachFrame->viewDirectionNormalizedWS = lookAtVector;
 		uniformBufferUpdatedEachFrame->mWtoM_transposed = mWtoM_transposed_4;
 		uniformBufferUpdatedEachFrame->lightDiffuseColor = glm::vec4(1.0f,1.0f,1.0f,1.0f);
-		uniformBufferUpdatedEachFrame->lightAmbientColor = glm::vec4(0.6f,0.6f,0.6f,1.0f);
+		uniformBufferUpdatedEachFrame->lightAmbientColor = glm::vec4(0.4f,0.4f,0.4f,1.0f);
 
 		// Make sure the uniform buffer is uploaded
 		glUnmapBuffer(GL_UNIFORM_BUFFER);
@@ -307,12 +360,19 @@ void display()
 
 	// Bind rendering objects
 	glBindProgramPipeline(PipelineName);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, oglTextureModelDiffuse);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, oglTextureModelNormal);	
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, oglTextureModelSpecular);	
+
 	glBindVertexArray(VertexArrayModel);
+	
 	glBindBufferBase(GL_UNIFORM_BUFFER, MySemantic::uniform::UNIFORM_UPDATE_EACH_FRAME, BufferName[buffer::UNIFORM_UPDATE_EACH_FRAME]);
 
-	//render Mesh
-	unsigned int iMesh = 0;
-	recursiveMeshRendering(fullModel->GetAssimpScene(),fullModel->GetAssimpScene()->mRootNode,&iMesh);
+	glDrawElements(GL_TRIANGLES, pCurrentScene->children[0]->NbFaces*3, GL_UNSIGNED_SHORT, NULL);
+
 
 	amd::swapBuffers();
 }
