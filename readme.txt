@@ -1,8 +1,9 @@
 ================================================================================
-AMD FirePro Graphics SDK
+AMD FirePro SDK
 --------------------------------------------------------------------------------
-http://developer.amd.com/zones/firepro
-firepro@amd.com
+http://developer.amd.com/sdks/wgsdk
+https://github.com/AMD-FirePro
+FirePro.Developers@amd.com
 
 ================================================================================
 Visual C++ instructions
@@ -14,6 +15,15 @@ http://www.cmake.org/cmake/resources/software.html
 The samples run only when launched from Visual C++ IDE.
 
 ================================================================================
+0.8.1
+--------------------------------------------------------------------------------
+- 2012-08-01 Updated lighting sample
+- 2012-08-01 Fixed transfer overlap sample
+- 2012-07-31 Updated sparse texture sample readme.txt
+- 2012-07-31 Integrated transfer overlap sample
+- 2012-07-31 Integrated F2 sample
+
+================================================================================
 0.8.0
 --------------------------------------------------------------------------------
 - 2012-07-10 CMake project for automagic inclusion of each sample
@@ -21,5 +31,15 @@ The samples run only when launched from Visual C++ IDE.
 - 2012-06-19 Added Frame lock sample
 - 2012-06-12 Added sparse texture sample
 - 2012-02-23 Added Multi draw indirect sample
+
+================================================================================
+TODO: 
+--------------------------------------------------------------------------------
+- Allowing in source build
+- Integrating the model and texture loader into the AMD external library
+- Adding readme.txt for each samples
+- Adding automagic integration of OpenCL kernels into the Visual C++ solution
+- Adding MinGW support
+- Adding the 10bit sample 
 
 ================================================================================
