@@ -41,5 +41,6 @@ TODO:
 - Adding automagic integration of OpenCL kernels into the Visual C++ solution
 - Adding MinGW support
 - Adding the 10bit sample 
+- Remove Assimp 2.0
 
 ================================================================================

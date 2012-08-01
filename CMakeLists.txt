@@ -6,6 +6,10 @@ enable_testing()
 
 #CMAKE_BUILD_TOOL
 
+if(CMAKE_CURRENT_SOURCE_DIR EQUAL CMAKE_CURRENT_BINARY_DIR)
+	message(FATAL_ERROR "Source and binary directories must be different")
+endif(CMAKE_CURRENT_SOURCE_DIR EQUAL CMAKE_CURRENT_BINARY_DIR)
+
 ################################
 # Add common source 
 
@@ -27,6 +31,8 @@ endmacro(addExternalPackageGTC)
 ################################
 # Add Assimp 
 
+set(ASSIMP_DIRECTORY assimp-2.0.863-sdk)
+
 if(MSVC AND NOT CMAKE_CL_64)
 	set(ASSIMP_LIBRARY_DIRECTORY "assimp_release-dll_win32")
 	set(ASSIMP_BINARY_DIRECTORY "assimp_release-dll_win32/Assimp32.dll")
@@ -37,9 +43,9 @@ if(MSVC AND CMAKE_CL_64)
 	set(ASSIMP_BINARY_DIRECTORY "assimp_release-dll_x64/Assimp64.dll")
 endif(MSVC AND CMAKE_CL_64)
 
-set(ASSIMP_BINARY ${CMAKE_CURRENT_SOURCE_DIR}/external/assimp-2.0.863-sdk/bin/${ASSIMP_BINARY_DIRECTORY}) 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/assimp-2.0.863-sdk/include)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/assimp-2.0.863-sdk/lib/${ASSIMP_LIBRARY_DIRECTORY})
+set(ASSIMP_BINARY ${CMAKE_CURRENT_SOURCE_DIR}/external/${ASSIMP_DIRECTORY}/bin/${ASSIMP_BINARY_DIRECTORY}) 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/${ASSIMP_DIRECTORY}/include)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/${ASSIMP_DIRECTORY}/lib/${ASSIMP_LIBRARY_DIRECTORY})
 
 set(ASSIMP_LIBRARY assimp)
 
