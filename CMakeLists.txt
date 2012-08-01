@@ -115,15 +115,18 @@ endif(WIN32)
 # Add OpenCL
 
 if(MSVC AND NOT CMAKE_CL_64)
-	set(CL_BINARY_DIRECTORY "x86")
+	set(CL_LIBRARY_DIRECTORY "x86")
+	set(CL_BINARY_DIRECTORY "x86/OpenCL.dll")
 endif(MSVC AND NOT CMAKE_CL_64)
 
 if(MSVC AND CMAKE_CL_64)
-	set(CL_BINARY_DIRECTORY "x86_64")
+	set(CL_LIBRARY_DIRECTORY "x86_64")
+	set(CL_BINARY_DIRECTORY "x86_64/OpenCL.dll")
 endif(MSVC AND CMAKE_CL_64)
 
+set(CL_BINARY ${CMAKE_CURRENT_SOURCE_DIR}/external/opencl-1.2/bin/${CL_BINARY_DIRECTORY}) 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/opencl-1.2)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/opencl-1.2/lib/${CL_BINARY_DIRECTORY})
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/opencl-1.2/lib/${CL_LIBRARY_DIRECTORY})
 
 set(CL_LIBRARY OpenCL)
 
@@ -182,7 +185,7 @@ function(createSample NAME)
 		TARGET ${NAME} POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy ${ASSIMP_BINARY} ${CMAKE_CURRENT_BINARY_DIR})
 
-	target_link_libraries(${NAME} ${GL_LIBRARY} ${GLEW_LIBRARY} ${FREEGLUT_LIBRARY} ${ASSIMP_LIBRARY})
+	target_link_libraries(${NAME} ${GL_LIBRARY} ${CL_LIBRARY} ${GLEW_LIBRARY} ${FREEGLUT_LIBRARY} ${ASSIMP_LIBRARY})
 endfunction(createSample)
 
 function(createSampleWGL NAME)
@@ -204,7 +207,7 @@ function(createSampleWGL NAME)
 		TARGET ${NAME} POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy ${ASSIMP_BINARY} ${CMAKE_CURRENT_BINARY_DIR})
 
-	target_link_libraries(${NAME} ${GL_LIBRARY} ${GLEW_LIBRARY} ${FREEGLUT_LIBRARY} ${ASSIMP_LIBRARY})
+	target_link_libraries(${NAME} ${GL_LIBRARY} ${CL_LIBRARY} ${GLEW_LIBRARY} ${FREEGLUT_LIBRARY} ${ASSIMP_LIBRARY})
 endfunction(createSampleWGL)
 
 ################################

@@ -257,7 +257,7 @@ bool GLSLShader::Init(unsigned int shaderProfile, GpuParams * params)
 	std::string FragmentProgramName = m_ProgramName + ".frag";
 
 	// path
-	std::string ProgramPath = "Shaders/";
+	std::string ProgramPath = "data/shaders/";
 	
 	// load
 	std::string vertexShaderCode = ReadFileContent(ProgramPath + VertexProgramName);

@@ -1,6 +1,6 @@
 add_subdirectory(F2)
+add_subdirectory(cl-transfer-overlap)
 add_subdirectory(gl-lighting)
-add_subdirectory(gl-multi-draw-indirect)
 add_subdirectory(gl-sparse-texture)
 add_subdirectory(gl-stereo-gs)
 add_subdirectory(gl-tessellation)

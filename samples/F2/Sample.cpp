@@ -114,18 +114,18 @@ bool GLSample::Initialize()
 	ResetMaterialProperties();
 	ResizeDraw(true);
 
-	m_texDiffuse = CreateTexture2D("Media/Stones_Diffuse.dds");
-	m_texBump = CreateTexture2D("Media/Stones_NormalHeight.tga");
-	m_texEnvCube = CreateTextureCube("Media/EnvMap.dds");
-	m_texBackground = CreateTexture2D("Media/logo.dds");
+	m_texDiffuse = CreateTexture2D("data/Stones_Diffuse.dds");
+	m_texBump = CreateTexture2D("data/Stones_NormalHeight.tga");
+	m_texEnvCube = CreateTextureCube("data/EnvMap.dds");
+	m_texBackground = CreateTexture2D("data/logo.dds");
 
-	m_texNoise = CreateTexture2D("Media/Noise.tga");
+	m_texNoise = CreateTexture2D("data/Noise.tga");
 
 	SetUniform(envMapCube, 3);	// has to be set even if not evaluated... or error while rendering geom
 	SetUniform(startOffsetBuffer, 0);
 	SetUniform(linkedListBuffer, 1);
 
-	fullModel = new ModelAndTextureLoader("Media/Models/F40/","Media/Models/F40/F40.obj"); 
+	fullModel = new ModelAndTextureLoader("data/models/F40/","data/models/F40/F40.obj"); 
 	SetModelSize(fullModel->GetSize());
 	SetModelCenter(fullModel->GetCenter());
 

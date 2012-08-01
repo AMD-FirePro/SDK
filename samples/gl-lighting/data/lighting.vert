@@ -20,8 +20,7 @@ layout(shared,  binding = UNIFORM_UPDATE_EACH_FRAME) uniform U_UPDATEEACHFRAME
 	mat4 mWtoM_transposed;
 	vec4 lightDiffuseColor;
 	vec4 lightAmbientColor;
-	
-	
+
 } u_UpdateEachFrame;
 
 
