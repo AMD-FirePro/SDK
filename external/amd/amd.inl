@@ -12,6 +12,8 @@ void display();
 namespace amd
 {
 	bool isWireFrame=false;
+	bool drawInputMesh=false;
+
 	inline void swapBuffers()
 	{
 		glutSwapBuffers();
@@ -336,7 +338,10 @@ namespace amd
 			end();
 			exit(0);
 		case 'w':
-			isWireFrame=!isWireFrame;
+			isWireFrame =!isWireFrame;
+            break;
+		case 'm':
+			drawInputMesh =!drawInputMesh;
             break;
 		default:
 			++Window.KeyPressed[key];
