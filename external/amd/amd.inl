@@ -11,8 +11,21 @@ void display();
 
 namespace amd
 {
-	bool isWireFrame=false;
-	bool drawInputMesh=false;
+	inline std::string format(const char* msg, ...)
+	{
+		std::size_t const STRING_BUFFER(10000);
+		char text[STRING_BUFFER];
+		va_list list;
+
+		if(msg == 0)
+			return std::string();
+
+		va_start(list, msg);
+			vsprintf(text, msg, list);
+		va_end(list);
+
+		return std::string(text);
+	}
 
 	inline void swapBuffers()
 	{
@@ -338,10 +351,10 @@ namespace amd
 			end();
 			exit(0);
 		case 'w':
-			isWireFrame =!isWireFrame;
+			Window.WireFrame = !Window.WireFrame;
             break;
 		case 'm':
-			drawInputMesh =!drawInputMesh;
+			Window.DrawInputMesh = !Window.DrawInputMesh;
             break;
 		default:
 			++Window.KeyPressed[key];
@@ -444,6 +457,7 @@ namespace amd
 	(
 		int argc, char* argv[], 
 		glm::ivec2 const & Size, 
+		int PixelDepth,
 		int Profile,
 		int Major, int Minor
 	)
@@ -452,6 +466,7 @@ namespace amd
 		glutInitWindowPosition(64, 64);
 		glutInit(&argc, argv);
 		glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);// | GLUT_MULTISAMPLE);
+		glutInitDisplayString(format("red=%d green=%d blue=%d depth double", PixelDepth, PixelDepth, PixelDepth).c_str());
 
 		int WindowHandle = glutCreateWindow(argv[0]);
 #if !defined(__APPLE__)
