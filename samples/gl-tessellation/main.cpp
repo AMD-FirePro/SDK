@@ -245,7 +245,7 @@ void display()
 	glViewport(0, 0, Window.Size.x, Window.Size.y);
 	//clear back buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	if (amd::isWireFrame)
+	if (Window.WireFrame)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -272,7 +272,7 @@ void display()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, PatchIndicesBufferName);
 	glDrawElements(GL_PATCHES, PatchIndicesCount, GL_UNSIGNED_INT, 0);
 	
-	if (amd::drawInputMesh)
+	if (Window.DrawInputMesh)
 	{
 		glUseProgram(ProgramName2);
 		glUniformMatrix4fv(UniformMVP2, 1, GL_FALSE, &matMVP[0][0]);
@@ -289,7 +289,7 @@ int main(int argc, char* argv[])
 
 	int result = amd::run(
 		argc, argv,
-		glm::ivec2(::SAMPLE_SIZE_WIDTH, ::SAMPLE_SIZE_HEIGHT), 
+		glm::ivec2(::SAMPLE_SIZE_WIDTH, ::SAMPLE_SIZE_HEIGHT), 8, 
 		WGL_CONTEXT_CORE_PROFILE_BIT_ARB, ::SAMPLE_MAJOR_VERSION, 
 		::SAMPLE_MINOR_VERSION);
 

@@ -409,7 +409,7 @@ int main(int argc, char* argv[])
 	// it will call freeglut to set a stereo pixel format
 	return amd::run(
 		argc, argv,
-		glm::ivec2(::gWidth, ::gHeight), 
+		glm::ivec2(::gWidth, ::gHeight), 8, 
 		WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB, ::SAMPLE_MAJOR_VERSION, 
 		::SAMPLE_MINOR_VERSION);
 }
