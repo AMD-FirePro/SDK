@@ -6,9 +6,9 @@ enable_testing()
 
 #CMAKE_BUILD_TOOL
 
-if(CMAKE_CURRENT_SOURCE_DIR EQUAL CMAKE_CURRENT_BINARY_DIR)
+if(${CMAKE_CURRENT_SOURCE_DIR} MATCHES ${CMAKE_CURRENT_BINARY_DIR})
 	message(FATAL_ERROR "Source and binary directories must be different")
-endif(CMAKE_CURRENT_SOURCE_DIR EQUAL CMAKE_CURRENT_BINARY_DIR)
+endif(${CMAKE_CURRENT_SOURCE_DIR} MATCHES ${CMAKE_CURRENT_BINARY_DIR})
 
 ################################
 # Add common source 
