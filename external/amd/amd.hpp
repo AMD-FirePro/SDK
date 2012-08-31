@@ -74,6 +74,8 @@ namespace amd
 		glm::vec2 TranlationCurrent;
 		glm::vec2 RotationOrigin;
 		glm::vec2 RotationCurrent;
+		bool WireFrame;
+		bool DrawInputMesh;
 		int MouseButtonFlags;
 		std::size_t KeyPressed[256];
 	};

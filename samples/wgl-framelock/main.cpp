@@ -12,7 +12,7 @@ HWND		g_hWnd;
 HDC			g_hDC;
 HGLRC		g_hCtx;
 TCHAR       g_szTitle[64]       = { "Genlock" };			
-TCHAR       g_szWindowClass[64] = { "OGL" };;		
+TCHAR       g_szWindowClass[64] = { "OGL" };		
 
 int		    g_FontBase;
 bool	    g_framelock				= false;
@@ -50,18 +50,19 @@ bool OpenWindow(bool bFullScreen = false)
 		dwStyle=WS_OVERLAPPEDWINDOW;
 	}
 
-	g_hWnd = CreateWindowEx(	dwExStyle,
-							g_szWindowClass, 
-							g_szTitle,
-							dwStyle,
-							CW_USEDEFAULT,
-							CW_USEDEFAULT,
-							g_width,
-							g_height,
-							NULL,
-							NULL,
-							(HINSTANCE)GetModuleHandle(NULL),
-							NULL);
+	g_hWnd = CreateWindowEx(
+		dwExStyle,
+		g_szWindowClass, 
+		g_szTitle,
+		dwStyle,
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
+		g_width,
+		g_height,
+		NULL,
+		NULL,
+		(HINSTANCE)GetModuleHandle(NULL),
+		NULL);
 
 	if (!g_hWnd)
 		return FALSE;
