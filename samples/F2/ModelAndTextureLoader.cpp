@@ -1,32 +1,29 @@
 #include "ModelAndTextureLoader.hpp"
 #include <GL/glew.h>
-#include <assimp\config.h>
-#include <assimp\vector3.h>
-#include <assimp\matrix4x4.h>
+//#include <assimp\config.h>
+//#include <assimp\Importer.hpp>
+#include <assimp.h>
 
 #include <gli/gli.hpp>
 #include <gli/gtx/loader.hpp>
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelAndTextureLoader::get_bounding_box_for_node (const  aiNode* nd, 
-	 aiVector3D* min, 
-	 aiVector3D* max, 
-	 aiMatrix4x4* trafo)
+void ModelAndTextureLoader::get_bounding_box_for_node (const struct aiNode* nd, 
+	struct aiVector3D* min, 
+	struct aiVector3D* max, 
+	struct aiMatrix4x4* trafo)
 {
-	aiMatrix4x4 prev;
+	struct aiMatrix4x4 prev;
 	unsigned int n = 0, t;
 
 	prev = *trafo;
 	aiMultiplyMatrix4(trafo,&nd->mTransformation);
 
-	for (; n < nd->mNumMeshes; ++n) 
-	{
+	for (; n < nd->mNumMeshes; ++n) {
 		const struct aiMesh* mesh = m_assimpScene->mMeshes[nd->mMeshes[n]];
-		for (t = 0; t < mesh->mNumVertices; ++t) 
-		{
+		for (t = 0; t < mesh->mNumVertices; ++t) {
 
-			aiVector3D tmp = mesh->mVertices[t];
+			struct aiVector3D tmp = mesh->mVertices[t];
 			aiTransformVecByMatrix4(&tmp,trafo);
 
 			min->x = aisgl_min(min->x,tmp.x);
@@ -46,9 +43,9 @@ void ModelAndTextureLoader::get_bounding_box_for_node (const  aiNode* nd,
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelAndTextureLoader::get_bounding_box ( aiVector3D* min,  aiVector3D* max)
+void ModelAndTextureLoader::get_bounding_box (struct aiVector3D* min, struct aiVector3D* max)
 {
-	aiMatrix4x4 trafo;
+	struct aiMatrix4x4 trafo;
 	aiIdentityMatrix4(&trafo);
 
 	min->x = min->y = min->z =  1e10f;
@@ -61,36 +58,20 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 	m_nbTotalMesh = 0;
 	m_allMeshes = NULL;
 
-
-
-	//Before Assimp 3.0 :
 	//force to recompute normal tangent and bitangent
 	//Assimp::Importer::SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS, aiComponent_NORMALS);
 	//aiSetImportPropertyInteger(AI_CONFIG_PP_RVC_FLAGS, aiComponent_NORMALS);
 	//aiSetImportPropertyInteger(AI_CONFIG_PP_RVC_FLAGS, aiComponent_TANGENTS_AND_BITANGENTS);
-	//m_assimpScene = aiImportFile(fullPathToModel,  aiProcessPreset_TargetRealtime_MaxQuality
-	//	 | aiProcess_RemoveComponent | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals //force to recompute normal tangent and bitangent
-	//	 );
 
 
-
-	m_myImporter = new Assimp::Importer();
-
-	//force to recompute normal tangent and bitangent
-	m_myImporter->SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS, aiComponent_NORMALS);
-	m_myImporter->SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS, aiComponent_TANGENTS_AND_BITANGENTS);
-
-	m_assimpScene = m_myImporter->ReadFile(fullPathToModel,aiProcessPreset_TargetRealtime_MaxQuality
-		 | aiProcess_RemoveComponent | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals //force to recompute normal tangent and bitangent
-		 );
-
-	
+	m_assimpScene = aiImportFile(fullPathToModel,  aiProcessPreset_TargetRealtime_MaxQuality|aiProcess_PreTransformVertices);
+//		 | aiProcess_RemoveComponent | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals //force to recompute normal tangent and bitangent
+//		 );
 
 
 	if ( m_assimpScene )
 	{
-
-		aiVector3D scene_min, scene_max, scene_center;
+		struct aiVector3D scene_min, scene_max, scene_center;
 		get_bounding_box(&scene_min,&scene_max);
 		m_vCenter.x = (scene_min.x + scene_max.x) / 2.0f;
 		m_vCenter.y = (scene_min.y + scene_max.y) / 2.0f;
@@ -99,7 +80,6 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 		m_fSize = scene_max.x-scene_min.x;
 		m_fSize = aisgl_max(scene_max.y - scene_min.y,m_fSize);
 		m_fSize = aisgl_max(scene_max.z - scene_min.z,m_fSize);
-
 
 		RecursiveMesh_CountTotalMesh(m_assimpScene,m_assimpScene->mRootNode);
 
@@ -112,7 +92,6 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 
 
 		//load textures
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 		m_textureOfEachMaterial = new MATERIAL_TEXTUREID[m_assimpScene->mNumMaterials];
 
@@ -176,43 +155,38 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 			}
 		}
 
-		int numTextures = m_textureIdMap.size();
+		int numTextures = int(m_textureIdMap.size());
 
 		std::map<std::string, GLuint*>::iterator itr = m_textureIdMap.begin();
 
 		m_textureIds = new GLuint[numTextures];
 		glGenTextures(numTextures, m_textureIds);
 
-
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		for (int i=0; i<numTextures; i++)
 		{
 			std::string filename = (*itr).first;
 			(*itr).second = &m_textureIds[i];
 
 			gli::texture2D textureFileLoaded = gli::load(std::string(TextureDirectory) + filename);
-
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, m_textureIds[i]);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			gli::texture2D::format_type formatImage = textureFileLoaded.format();
-
-			GLsizei dimX = textureFileLoaded[0].dimensions().x;
-			GLsizei dimY = textureFileLoaded[0].dimensions().y;
-
 			if ( formatImage == gli::RGB8U )
 			{
-				glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,dimX,dimY,0,GL_RGB,GL_UNSIGNED_BYTE,textureFileLoaded[0].data());
+				glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,textureFileLoaded[0].dimensions().x,textureFileLoaded[0].dimensions().y,0,GL_RGB,GL_UNSIGNED_BYTE,textureFileLoaded[0].data());
 			}
 			else if ( formatImage == gli::RGBA8U )
 			{
-				glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,dimX,dimY,0,GL_RGBA,GL_UNSIGNED_BYTE,textureFileLoaded[0].data());
+				glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,textureFileLoaded[0].dimensions().x,textureFileLoaded[0].dimensions().y,0,GL_RGBA,GL_UNSIGNED_BYTE,textureFileLoaded[0].data());
 			}
 			glBindTexture(GL_TEXTURE_2D, 0);
 
 
 			itr++;
 		}
-
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 		for (unsigned int m=0; m<m_assimpScene->mNumMaterials; m++)
 		{
 
@@ -272,14 +246,12 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 
 		}
 
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-
 	}	
 }
 
 ModelAndTextureLoader::~ModelAndTextureLoader()
 {
-	glDeleteTextures(m_textureIdMap.size(),m_textureIds);
+	glDeleteTextures(int(m_textureIdMap.size()), m_textureIds);
 	if (m_textureIds) { delete[] m_textureIds; m_textureIds = NULL; }
 	if ( m_textureOfEachMaterial ) { delete[] m_textureOfEachMaterial; m_textureOfEachMaterial = NULL; }
 
@@ -289,11 +261,10 @@ ModelAndTextureLoader::~ModelAndTextureLoader()
 	{
 		unsigned int iMesh = 0;
 		RecursiveMesh_Delete(m_assimpScene,m_assimpScene->mRootNode,&iMesh);
+		aiReleaseImport(m_assimpScene);
 	}
 
 	if ( m_allMeshes ) { free(m_allMeshes); m_allMeshes = NULL; }
-
-	if ( m_myImporter ) { delete m_myImporter; m_myImporter = NULL; }
 }
 
 
