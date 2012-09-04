@@ -18,7 +18,7 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/external")
 ################################
 # Add Assimp 
 
-set(ASSIMP_DIRECTORY assimp-2.0.863-sdk)
+set(ASSIMP_DIRECTORY assimp-3.0.1270-sdk)
 
 if(MSVC AND NOT CMAKE_CL_64)
 	set(ASSIMP_LIBRARY_DIRECTORY "assimp_release-dll_win32")
