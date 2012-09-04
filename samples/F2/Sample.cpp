@@ -3,7 +3,6 @@
 #include "rendermanager.hpp"
 #include "glslshader.hpp"
 
-#include <assimp.h>
 #include "ModelAndTextureLoader.hpp"
 
 /////////////////////////////////////////////////////////////////////////////////////////////
