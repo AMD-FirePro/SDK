@@ -67,11 +67,23 @@ vec3 ComputeIllumination(vec3 vNormalTS, vec3 materialDiffuse, vec3 vLightTS, ve
 
 void main()
 {
-	vec3 normalTS = normalize(texture2D(texture_Normal, In.Texcoord.st).xyz);
+	vec3 normalTS = normalize(texture2D(texture_Normal, In.Texcoord.st).xyz*2.0f-1.0f);
 	vec4 materialDiffuse = texture2D(texture_Diffuse, In.Texcoord.st);
 	vec4 materialSpecular = texture2D(texture_Specular, In.Texcoord.st); 
 	vec3 vLightTS = -normalize(vec3(In.vLightTS.x,In.vLightTS.y,In.vLightTS.z));
 	vec3 vViewTS = -normalize(vec3(In.vViewTS.x,In.vViewTS.y,In.vViewTS.z));
-	
+
+
+	//debug lines :
+	//Color = vec4(normalTS.xyz/2.0f+0.5f,1.0f); return; //normal map
+	//Color = vec4(materialDiffuse.xyz,1.0f); return;    //diffuse map
+	//Color = vec4(materialSpecular.xyz,1.0f); return;   //specular map - color
+	//Color = vec4(materialSpecular.www,1.0f); return;   //specular map - intensity
+	//Color = vec4(vLightTS.xyz/2.0f+0.5f,1.0f); return; //light, Tangent Space
+	//Color = vec4(vViewTS.xyz/2.0f+0.5f,1.0f); return;  //view, Tangent Space
+
+
+	//final mix
 	Color = vec4(ComputeIllumination( normalTS, materialDiffuse.xyz,  vLightTS,  vViewTS, materialSpecular.xyzw  ),1.0f);
+
 }
