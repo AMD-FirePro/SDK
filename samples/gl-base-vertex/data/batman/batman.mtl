@@ -1,0 +1,70 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 17.07.2012 01:08:15
+
+newmtl Batman_Armoured_Head_Mat
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.5880 0.5880 0.5880
+	Ks 1.0000 1.0000 1.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka BatmanArmoured_Head_D.tga
+	map_Kd BatmanArmoured_Head_D.tga
+	map_Ks BatmanArmoured_Head_S.tga
+	map_bump BatmanArmoured_Head_N.tga
+	bump BatmanArmoured_Head_N.tga
+
+newmtl Batman_Armoured_Body_Mat
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.5880 0.5880 0.5880
+	Ks 1.0000 1.0000 1.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka BatmanArmoured_Body_D.tga
+	map_Kd BatmanArmoured_Body_D.tga
+	map_Ks BatmanArmoured_Body_S.tga
+	map_bump BatmanArmoured_Body_N.tga
+	bump BatmanArmoured_Body_N.tga
+
+newmtl BatmanEye_Mat
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka BatmanEye_D.tga
+	map_Kd BatmanEye_D.tga
+	map_bump BatmanEye_N_2.tga
+	bump BatmanEye_N_2.tga
+
+newmtl V2_Batman_Cape_Mat_INST_1
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.5880 0.5880 0.5880
+	Ks 1.0000 1.0000 1.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka V2_Batman_Cape_D2.tga
+	map_Kd V2_Batman_Cape_D2.tga
+	map_Ks V2_Batman_Cape_S2.tga
+	map_d V2_Batman_Cape_A2.tga
+	map_bump V2_Batman_Cape_N2.tga
+	bump V2_Batman_Cape_N2.tga

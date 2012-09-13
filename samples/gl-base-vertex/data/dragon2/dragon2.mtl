@@ -1,0 +1,98 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 24.07.2012 11:54:25
+
+newmtl dragEyeGlass
+	Ns 43.2193
+	Ni 1.5000
+	d 0.5122
+	Tr 0.4878
+	Tf 0.5122 0.5122 0.5122 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.8000 0.8000 0.8000
+	Ks 0.5000 0.5000 0.5000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Dragon_Head_CM.tga
+	map_Kd Dragon_Head_CM.tga
+	map_bump Dragon_Head_NM.tga
+	bump Dragon_Head_NM.tga
+
+newmtl dragon_head_mat
+	Ns 43.2193
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.8000 0.8000 0.8000
+	Ks 0.5000 0.5000 0.5000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Dragon_Head_CM.tga
+	map_Kd Dragon_Head_CM.tga
+	map_bump Dragon_Head_NM.tga
+	bump Dragon_Head_NM.tga
+
+newmtl dragon_horns_mat
+	Ns 43.2193
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.8000 0.8000 0.8000
+	Ks 0.5000 0.5000 0.5000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Dragon_Head_CM.tga
+	map_Kd Dragon_Head_CM.tga
+	map_bump Dragon_Head_NM.tga
+	bump Dragon_Head_NM.tga
+
+newmtl dragon_teeth_mat
+	Ns 43.2193
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.8000 0.8000 0.8000
+	Ks 0.5000 0.5000 0.5000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Dragon_Head_CM.tga
+	map_Kd Dragon_Head_CM.tga
+	map_bump Dragon_Head_NM.tga
+	bump Dragon_Head_NM.tga
+
+newmtl dragon_body_mat
+	Ns 43.2193
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.8000 0.8000 0.8000
+	Ks 0.5000 0.5000 0.5000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Dragon_body_CM.tga
+	map_Kd Dragon_body_CM.tga
+	map_bump Dragon_body_NM.tga
+	bump Dragon_body_NM.tga
+
+newmtl Drag_body_Plastic
+	Ns 43.2193
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.8000 0.8000 0.8000
+	Ks 0.5000 0.5000 0.5000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Dragon_body_CM.tga
+	map_Kd Dragon_body_CM.tga
+	map_bump Dragon_body_NM.tga
+	bump Dragon_body_NM.tga
