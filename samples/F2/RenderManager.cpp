@@ -834,13 +834,10 @@ void RenderManager::CreateAppendBuffers(int iWidth, int iHeight)
 
 	m_linkedListBuffer = 0;
 	int listBufSize = iWidth * iHeight * MAX_SORTED_FRAGMENT * sizeof(LinkedListBuffer);
-	int *pixels = (int*)malloc(listBufSize);
-	pixels[0]=10;
     glGenBuffers(1, &m_linkedListBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_linkedListBuffer);
-    glBufferData(GL_ARRAY_BUFFER, listBufSize, pixels, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, listBufSize, NULL, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0 );
-	delete pixels;
 
     glBindTexture(GL_TEXTURE_BUFFER_ARB, m_globalbuffer[1]);    
     glTexBuffer(GL_TEXTURE_BUFFER_ARB, GL_RGBA32UI, m_linkedListBuffer);      
@@ -867,23 +864,13 @@ void RenderManager::ResizeAppendBuffers(int iWidth, int iHeight)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32UI,  iWidth, iHeight, 0, GL_RED_INTEGER_EXT, GL_INT, NULL);
 
 	int listBufSize = iWidth * iHeight * MAX_SORTED_FRAGMENT * sizeof(LinkedListBuffer);
-	int *pixels = (int*)malloc(listBufSize);
-	pixels[0]=10;
-	//glDeleteBuffers(1, &m_linkedListBuffer);
- //   glGenBuffers(1, &m_linkedListBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_linkedListBuffer);
-    glBufferData(GL_ARRAY_BUFFER, listBufSize, pixels, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, listBufSize, NULL, GL_DYNAMIC_DRAW);
     glVertexPointer(3, GL_FLOAT, 0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0 );
-	delete pixels;
 
     glBindTexture(GL_TEXTURE_BUFFER_ARB, m_globalbuffer[1]);    
     glTexBuffer(GL_TEXTURE_BUFFER_ARB, GL_RGBA32UI, m_linkedListBuffer);      
-
-	//glDeleteBuffers(1, &m_atomicCounter);
-	//glGenBuffers(1,&m_atomicCounter);
-	//glBindBuffer(GL_ATOMIC_COUNTER_BUFFER_EXT, m_atomicCounter);
-	//glBufferData(GL_ATOMIC_COUNTER_BUFFER_EXT, 32, NULL, GL_DYNAMIC_DRAW);
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	CheckOglError();
