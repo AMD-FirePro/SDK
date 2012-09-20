@@ -243,7 +243,11 @@ namespace amd
 		return Result == GL_TRUE;
 	}
 
-	inline bool checkShader(GLuint ShaderName, const char* Source)
+	inline bool checkShader
+	(
+		GLuint ShaderName, 
+		std::string const & Source
+	)
 	{
 		if(!ShaderName)
 			return false;
@@ -271,6 +275,15 @@ namespace amd
 
 
 		return Result;
+	}
+
+	inline GLuint createShader
+	(
+		GLenum Type,
+		std::string const & Source
+	)
+	{
+		return createShader(Type, "", Source);
 	}
 
 	inline GLuint createShader

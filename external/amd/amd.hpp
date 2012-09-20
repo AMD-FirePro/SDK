@@ -83,7 +83,9 @@ namespace amd
 	std::string loadFile(std::string const & Filename);
 	bool checkError(const char* Title);
 	bool checkProgram(GLuint ProgramName);
-	bool checkShader(GLuint ShaderName, char const* Source);
+	GLuint createShader(GLenum Type, std::string const & Source);
+	GLuint createShader(GLenum Type, std::string const & Arguments, std::string const & Source);
+	bool checkShader(GLuint ShaderName, std::string const & Source);
 	bool validateProgram(GLuint ProgramName);
 
 	int version(int Major, int Minor);
