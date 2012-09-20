@@ -5,9 +5,10 @@
 #include <string>
 #include <glm/glm.hpp>
 
-#include <assimp.h>
-#include <aiPostProcess.h>
-#include <aiScene.h>
+#include <assimp/cimport.h>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <assimp/Importer.hpp>
 
 #define aisgl_min(x,y) (x<y?x:y)
 #define aisgl_max(x,y) (y>x?y:x)

@@ -198,7 +198,7 @@ ModelAndTextureLoader_V2::ModelAndTextureLoader_V2(const char* TextureDirectory,
       }
     }
 
-    int numTextures = m_textureIdMap.size();
+    int numTextures = int(m_textureIdMap.size());
 
     std::map<std::string, GLuint*>::iterator itr = m_textureIdMap.begin();
 
@@ -303,7 +303,7 @@ ModelAndTextureLoader_V2::ModelAndTextureLoader_V2(const char* TextureDirectory,
 
 ModelAndTextureLoader_V2::~ModelAndTextureLoader_V2()
 {
-  glDeleteTextures(m_textureIdMap.size(),m_textureIds);
+  glDeleteTextures(GLsizei(m_textureIdMap.size()), m_textureIds);
   if (m_textureIds) { delete[] m_textureIds; m_textureIds = NULL; }
   if ( m_textureOfEachMaterial ) { delete[] m_textureOfEachMaterial; m_textureOfEachMaterial = NULL; }
 
@@ -413,11 +413,9 @@ void ModelAndTextureLoader_V2::CreateBuffers(int size)
 
    
     unsigned int IndicesSize = 0;
-    for(int i=0; i<m_nbTotalMesh; i++)
-    {
+    for(unsigned int i = 0; i < m_nbTotalMesh; ++i)
       IndicesSize+=m_AdvmeshStruct[i].nb3PointsFaces*3*sizeof(unsigned int);
-     
-    }
+
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndicesSize, NULL, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
@@ -487,7 +485,6 @@ void ModelAndTextureLoader_V2::FillVBO(const struct aiScene *sc, const struct ai
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-
 void ModelAndTextureLoader_V2::SetVertexFormat()
 {
     glGenVertexArrays(1,&VAO_ID);
@@ -512,10 +509,8 @@ void ModelAndTextureLoader_V2::SetVertexFormat()
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndicesBufferID);
 
-
     glBindVertexArray(0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0 );
 }
-
 
