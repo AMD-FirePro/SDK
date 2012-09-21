@@ -100,6 +100,9 @@ bool initProgram()
 		GLuint VertShaderName = amd::createShader(GL_VERTEX_SHADER, VERT_SHADER_SOURCE);
 		GLuint FragShaderName = amd::createShader(GL_FRAGMENT_SHADER, FRAG_SHADER_SOURCE);
 
+		Validated = Validated && amd::checkShader(VertShaderName, VERT_SHADER_SOURCE);
+		Validated = Validated && amd::checkShader(FragShaderName, FRAG_SHADER_SOURCE);
+
 		ProgramName[program::VERTEX] = glCreateProgram();
 		glProgramParameteri(ProgramName[program::VERTEX], GL_PROGRAM_SEPARABLE, GL_TRUE);
 		glAttachShader(ProgramName[program::VERTEX], VertShaderName);
