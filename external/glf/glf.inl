@@ -489,7 +489,6 @@ namespace glf
 	(
 		int argc, char* argv[], 
 		glm::ivec2 const & Size, 
-		int PixelDepth,
 		int Profile,
 		int Major, int Minor
 	)
@@ -497,8 +496,7 @@ namespace glf
 		glutInitWindowSize(Size.x, Size.y);
 		glutInitWindowPosition(64, 64);
 		glutInit(&argc, argv);
-		//glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);// | GLUT_MULTISAMPLE);
-		glutInitDisplayString(format("red=%d green=%d blue=%d depth double", PixelDepth, PixelDepth, PixelDepth).c_str());
+		glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);// | GLUT_MULTISAMPLE);
 
 		int WindowHandle = glutCreateWindow(argv[0]);
 #if !defined(__APPLE__)

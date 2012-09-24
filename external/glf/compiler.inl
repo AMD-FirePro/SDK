@@ -32,28 +32,22 @@ namespace glf
 		this->clear();
 	}
 
-	inline GLuint compiler::create(GLenum Type, std::string const & Filename)
+	inline GLuint compiler::create(
+		GLenum Type, 
+		std::string const & Filename)
 	{
 		return this->create(Type, std::string(), Filename);
 	}
 
 	// TODO: Add Arguments supports
-	inline GLuint compiler::create(GLenum Type, std::string const & Arguments, std::string const & Filename)
+	inline GLuint compiler::create(
+		GLenum Type, 
+		std::string const & Arguments, 
+		std::string const & Filename)
 	{
 		assert(!Filename.empty());
 	
 		commandline CommandLine(Arguments);
-
-		std::string Header;
-/*
-		if(CommandLine.getVersion())
-			Header = format("#version %d %s\n", CommandLine.getVersion(), CommandLine.getProfile().c_str());
-		Header += CommandLine.getDefines();
-*/
-		//if(Defines.empty())
-
-		//std::string Line;
-		//std::getline(SourceContent, Line);
 
 		std::string ShaderSource = glf::loadFile(Filename);
 

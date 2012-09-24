@@ -41,8 +41,10 @@ namespace glf
 		public:
 			commandline(std::string const & Arguments) :
 				Profile("core"),
-				Version(420)
-			{}
+				Version(-1)
+			{
+				this->parseArguments(Arguments);
+			}
 
 			void parseArguments
 			(
@@ -51,23 +53,19 @@ namespace glf
 			{
 				std::stringstream Stream(Arguments);
 				std::string Param;
-				std::vector<std::string> Defines;
-				std::vector<std::string> Includes;
 
-				while(Stream >> Param)
+				while(!Stream.eof())
 				{
+					Stream >> Param;
+
 					std::size_t Found = Param.find("-D");
 					if(Found != std::string::npos)
-					{
-						std::string Define;
-						Stream >> Define;
-						Defines.push_back(Define.substr(2));
-					}
+						this->Defines.push_back(Param.substr(2, Param.size() - 2));
 					else if(Param == "--define")
 					{
 						std::string Define;
 						Stream >> Define;
-						Defines.push_back(Define);
+						this->Defines.push_back(Define);
 					}
 					else if((Param == "--version") || (Param == "-v"))
 						Stream >> Version;
@@ -77,7 +75,7 @@ namespace glf
 					{
 						std::string Include;
 						Stream >> Include;
-						Includes.push_back(Include);
+						this->Includes.push_back(Include);
 					}
 		/*
 					else 
@@ -112,7 +110,7 @@ namespace glf
 			{
 				std::string Result;
 				for(std::size_t i = 0; i < this->Defines.size(); ++i)
-					Result += Defines[i];
+					Result += std::string("#define ") + this->Defines[i] + std::string("\n");
 				return Result;
 			}
 
@@ -120,6 +118,7 @@ namespace glf
 			std::string Profile;
 			int Version;
 			std::vector<std::string> Defines;
+			std::vector<std::string> Includes;
 		};
 
 		class parser
@@ -133,11 +132,14 @@ namespace glf
 			{
 				std::stringstream Stream;
 				Stream << Source;
-
 				std::string Line, Text;
+
+				// Handle command line version and profile arguments
 				if(CommandLine.getVersion() != -1)
-					//Text += "#version " + CommandLine.getVersion() + CommandLine.getProfile();
 					Text += glf::format("#version %d %s\n", CommandLine.getVersion(), CommandLine.getProfile().c_str());
+
+				// Handle command line defines
+				Text += CommandLine.getDefines();
 
 				while(std::getline(Stream, Line))
 				{
@@ -153,7 +155,7 @@ namespace glf
 
 						// Reorder so that the #version line is always the first of a shader text
 						if(CommandLine.getVersion() == -1)
-							Text = Line + Text;
+							Text = Line + std::string("\n") + Text;
 						// else skip is version is only mentionned
 						continue;
 					}

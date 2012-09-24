@@ -29,7 +29,7 @@
 namespace glf
 {
 #	ifdef WIN32
-		static std::string const DATA_DIRECTORY("./data/");
+		static std::string const DATA_DIRECTORY("../data/");
 #	else
 		static std::string const DATA_DIRECTORY("../../data/");
 #	endif
