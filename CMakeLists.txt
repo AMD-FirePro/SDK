@@ -74,6 +74,11 @@ elseif(UNIX)
 endif(WIN32)
 
 ################################
+# Add GLF 
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/glf)
+
+################################
 # Add GLM 
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/glm-0.9.3.3)
