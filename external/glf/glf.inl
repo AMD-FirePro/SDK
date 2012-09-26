@@ -9,23 +9,6 @@ bool begin();
 bool end();
 void display();
 
-#if (defined(WIN32))
-	// GL_ARB_vertex_attrib_binding
-	typedef void (GLAPIENTRY * PFNGLVERTEXARRAYBINDVERTEXBUFFEREXTPROC) (GLuint vaobj, GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride);
-	typedef void (GLAPIENTRY * PFNGLVERTEXARRAYBINDVERTEXATTRIBFORMATEXTPROC) (GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLboolean normalized, GLuint relativeoffset);
-	typedef void (GLAPIENTRY * PFNGLVERTEXARRAYBINDVERTEXATTRIBIFORMATEXTPROC) (GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset);
-	typedef void (GLAPIENTRY * PFNGLVERTEXARRAYBINDVERTEXATTRIBLFORMATEXTPROC) (GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset);
-	typedef void (GLAPIENTRY * PFNGLVERTEXARRAYBINDVERTEXATTRIBBINDINGEXTPROC) (GLuint vaobj, GLuint attribindex, GLuint bindingindex);
-	typedef void (GLAPIENTRY * PFNGLVERTEXARRAYBINDVERTEXBINDINGDIVISOREXTPROC) (GLuint vaobj, GLuint bindingindex, GLuint divisor);
-
-	PFNGLVERTEXARRAYBINDVERTEXBUFFEREXTPROC glVertexArrayBindVertexBufferEXT(0);
-	PFNGLVERTEXARRAYBINDVERTEXATTRIBFORMATEXTPROC glVertexArrayVertexAttribFormatEXT(0);
-	PFNGLVERTEXARRAYBINDVERTEXATTRIBIFORMATEXTPROC glVertexArrayVertexAttribIFormatEXT(0);
-	PFNGLVERTEXARRAYBINDVERTEXATTRIBLFORMATEXTPROC glVertexArrayVertexAttribLFormatEXT(0);
-	PFNGLVERTEXARRAYBINDVERTEXATTRIBBINDINGEXTPROC glVertexArrayVertexAttribBindingEXT(0);
-	PFNGLVERTEXARRAYBINDVERTEXBINDINGDIVISOREXTPROC glVertexArrayVertexBindingDivisorEXT(0);
-#endif // WIN32
-
 namespace glf
 {
 	inline void logImplementationDependentLimit(GLenum Value, std::string const & String)
@@ -72,13 +55,6 @@ namespace glf
 #if (defined(WIN32))
 		glewInit();
 		glGetError();
-		
-		glVertexArrayBindVertexBufferEXT = (PFNGLVERTEXARRAYBINDVERTEXBUFFEREXTPROC)glutGetProcAddress("glVertexArrayBindVertexBufferEXT");
-		glVertexArrayVertexAttribFormatEXT = (PFNGLVERTEXARRAYBINDVERTEXATTRIBFORMATEXTPROC)glutGetProcAddress("glVertexArrayVertexAttribFormatEXT");
-		glVertexArrayVertexAttribIFormatEXT = (PFNGLVERTEXARRAYBINDVERTEXATTRIBIFORMATEXTPROC)glutGetProcAddress("glVertexArrayVertexAttribIFormatEXT");
-		glVertexArrayVertexAttribLFormatEXT = (PFNGLVERTEXARRAYBINDVERTEXATTRIBLFORMATEXTPROC)glutGetProcAddress("glVertexArrayVertexAttribLFormatEXT");
-		glVertexArrayVertexAttribBindingEXT = (PFNGLVERTEXARRAYBINDVERTEXATTRIBBINDINGEXTPROC)glutGetProcAddress("glVertexArrayVertexAttribBindingEXT");
-		glVertexArrayVertexBindingDivisorEXT = (PFNGLVERTEXARRAYBINDVERTEXBINDINGDIVISOREXTPROC)glutGetProcAddress("glVertexArrayVertexBindingDivisorEXT");
 #endif
 	}
 
@@ -424,7 +400,7 @@ namespace glf
 		return 1;
 	}
 
-	bool validateVAO(GLuint VertexArrayName, std::vector<glf::vertexattrib> const & Expected)
+	inline bool validateVAO(GLuint VertexArrayName, std::vector<glf::vertexattrib> const & Expected)
 	{
 		bool Success = true;
 

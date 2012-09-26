@@ -28,11 +28,7 @@
 
 namespace glf
 {
-#	ifdef WIN32
-		static std::string const DATA_DIRECTORY("../data/");
-#	else
-		static std::string const DATA_DIRECTORY("../../data/");
-#	endif
+		static std::string const DATA_DIRECTORY("./data/");
 }//namespace glf
 
 #endif//GLF_COMMON_INCLUDED

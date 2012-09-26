@@ -122,7 +122,7 @@ namespace glf
 		GLvoid* Pointer;
 	};
 
-	bool operator== (vertexattrib const & A, vertexattrib const & B)
+	inline bool operator== (vertexattrib const & A, vertexattrib const & B)
 	{
 		return A.Enabled == B.Enabled && 
 			A.Size == B.Size && 
@@ -133,7 +133,7 @@ namespace glf
 			A.Long == B.Long;
 	}
 
-	bool operator!= (vertexattrib const & A, vertexattrib const & B)
+	inline bool operator!= (vertexattrib const & A, vertexattrib const & B)
 	{
 		return !(A == B);
 	}

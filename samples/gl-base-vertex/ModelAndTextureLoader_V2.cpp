@@ -1,49 +1,42 @@
 #include "ModelAndTextureLoader_V2.hpp"
-#include <GL/glew.h>
-#include <assimp\config.h>
-#include <assimp\vector3.h>
-#include <assimp\matrix4x4.h>
-
-#include <gli/gli.hpp>
-#include <gli/gtx/loader.hpp>
-
-#define        GL_VBO_FREE_MEMORY_ATI                     0x87FB
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelAndTextureLoader_V2::get_bounding_box_for_node (const  aiNode* nd, 
-  aiVector3D* min, 
-  aiVector3D* max, 
-  aiMatrix4x4* trafo)
+void ModelAndTextureLoader_V2::get_bounding_box_for_node
+(
+	aiNode const * Node, 
+	aiVector3D* Min, 
+	aiVector3D* Max, 
+	aiMatrix4x4* Trafo
+)
 {
-  aiMatrix4x4 prev;
-  unsigned int n = 0, t;
+	aiMatrix4x4 prev = *Trafo;
+	unsigned int n = 0, t;
 
-  prev = *trafo;
-  aiMultiplyMatrix4(trafo,&nd->mTransformation);
+	aiMultiplyMatrix4(Trafo, &Node->mTransformation);
 
-  for (; n < nd->mNumMeshes; ++n) 
-  {
-    const struct aiMesh* mesh = m_assimpScene->mMeshes[nd->mMeshes[n]];
-    for (t = 0; t < mesh->mNumVertices; ++t) 
-    {
+	for(; n < Node->mNumMeshes; ++n) 
+	{
+		const struct aiMesh* mesh = m_assimpScene->mMeshes[Node->mMeshes[n]];
+		for (t = 0; t < mesh->mNumVertices; ++t) 
+		{
 
-      aiVector3D tmp = mesh->mVertices[t];
-      aiTransformVecByMatrix4(&tmp,trafo);
+			aiVector3D tmp = mesh->mVertices[t];
+			aiTransformVecByMatrix4(&tmp, Trafo);
 
-      min->x = aisgl_min(min->x,tmp.x);
-      min->y = aisgl_min(min->y,tmp.y);
-      min->z = aisgl_min(min->z,tmp.z);
+			Min->x = aisgl_min(Min->x,tmp.x);
+			Min->y = aisgl_min(Min->y,tmp.y);
+			Min->z = aisgl_min(Min->z,tmp.z);
 
-      max->x = aisgl_max(max->x,tmp.x);
-      max->y = aisgl_max(max->y,tmp.y);
-      max->z = aisgl_max(max->z,tmp.z);
-    }
-  }
+			Max->x = aisgl_max(Max->x,tmp.x);
+			Max->y = aisgl_max(Max->y,tmp.y);
+			Max->z = aisgl_max(Max->z,tmp.z);
+		}
+	}
 
-  for (n = 0; n < nd->mNumChildren; ++n) {
-    get_bounding_box_for_node(nd->mChildren[n],min,max,trafo);
-  }
-  *trafo = prev;
+	for(n = 0; n < Node->mNumChildren; ++n)
+		get_bounding_box_for_node(Node->mChildren[n], Min, Max, Trafo);
+
+	*Trafo = prev;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,19 +50,19 @@ void ModelAndTextureLoader_V2::get_bounding_box ( aiVector3D* min,  aiVector3D* 
   get_bounding_box_for_node(m_assimpScene->mRootNode,min,max,&trafo);
 }
 
-ModelAndTextureLoader_V2::ModelAndTextureLoader_V2(const char* TextureDirectory,const char* fullPathToModel): 
-  glBuffer_VertexBufferPositionSize(0),
-  glBuffer_VertexBufferNormalSize(0),
-  glBuffer_VertexBufferTextureCoorSize(0),
-  glBuffer_VertexBufferTangentSize(0),
-  glBuffer_VertexBufferBitangentSize(0),
-  m_AdvmeshStruct(NULL)
+ModelAndTextureLoader_V2::ModelAndTextureLoader_V2
+(
+	const char* TextureDirectory,
+	const char* fullPathToModel
+) : 
+	glBuffer_VertexBufferPositionSize(0),
+	glBuffer_VertexBufferNormalSize(0),
+	glBuffer_VertexBufferTextureCoorSize(0),
+	glBuffer_VertexBufferTangentSize(0),
+	glBuffer_VertexBufferBitangentSize(0),
+	m_AdvmeshStruct(NULL),
+	m_nbTotalMesh(0)
 {
-  m_nbTotalMesh = 0;
-  
-
-
-
   //Before Assimp 3.0 :
   //force to recompute normal tangent and bitangent
   //Assimp::Importer::SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS, aiComponent_NORMALS);
@@ -78,8 +71,6 @@ ModelAndTextureLoader_V2::ModelAndTextureLoader_V2(const char* TextureDirectory,
   //m_assimpScene = aiImportFile(fullPathToModel,  aiProcessPreset_TargetRealtime_MaxQuality
   //	 | aiProcess_RemoveComponent | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals //force to recompute normal tangent and bitangent
   //	 );
-
-
 
   m_myImporter = new Assimp::Importer();
 
@@ -90,9 +81,6 @@ ModelAndTextureLoader_V2::ModelAndTextureLoader_V2(const char* TextureDirectory,
   m_assimpScene = m_myImporter->ReadFile(fullPathToModel,aiProcessPreset_TargetRealtime_MaxQuality
     | aiProcess_RemoveComponent | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals //force to recompute normal tangent and bitangent
     );
-
-
-
 
   if ( m_assimpScene )
   {
@@ -106,7 +94,6 @@ ModelAndTextureLoader_V2::ModelAndTextureLoader_V2(const char* TextureDirectory,
     m_fSize = scene_max.x-scene_min.x;
     m_fSize = aisgl_max(scene_max.y - scene_min.y,m_fSize);
     m_fSize = aisgl_max(scene_max.z - scene_min.z,m_fSize);
-
 
     RecursiveMesh_CountTotalMesh(m_assimpScene,m_assimpScene->mRootNode);
 
@@ -129,9 +116,6 @@ ModelAndTextureLoader_V2::ModelAndTextureLoader_V2(const char* TextureDirectory,
 
     iMesh = 0;
     //RecursiveMesh_Loading(m_assimpScene,m_assimpScene->mRootNode,&iMesh);
-
-
-
 
     //load textures
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -198,42 +182,34 @@ ModelAndTextureLoader_V2::ModelAndTextureLoader_V2(const char* TextureDirectory,
       }
     }
 
-    int numTextures = int(m_textureIdMap.size());
+	std::map<std::string, GLuint*>::iterator itr = m_textureIdMap.begin();
 
-    std::map<std::string, GLuint*>::iterator itr = m_textureIdMap.begin();
+	m_textureIds.resize(m_textureIdMap.size());
+	glGenTextures(GLsizei(m_textureIds.size()), &m_textureIds[0]);
 
-    m_textureIds = new GLuint[numTextures];
-    glGenTextures(numTextures, m_textureIds);
+	for(std::size_t i = 0; i < m_textureIds.size(); ++i)
+	{
+		std::string filename = (*itr).first;
+		(*itr).second = &m_textureIds[i];
 
+		gli::texture2D textureFileLoaded = gli::load(std::string(TextureDirectory) + filename);
 
-    for (int i=0; i<numTextures; i++)
-    {
-      std::string filename = (*itr).first;
-      (*itr).second = &m_textureIds[i];
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, m_textureIds[i]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		gli::texture2D::format_type formatImage = textureFileLoaded.format();
 
-      gli::texture2D textureFileLoaded = gli::load(std::string(TextureDirectory) + filename);
+		GLsizei dimX = textureFileLoaded[0].dimensions().x;
+		GLsizei dimY = textureFileLoaded[0].dimensions().y;
 
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, m_textureIds[i]);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      gli::texture2D::format_type formatImage = textureFileLoaded.format();
+		if(formatImage == gli::RGB8U)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, dimX, dimY, 0, GL_RGB, GL_UNSIGNED_BYTE, textureFileLoaded[0].data());
+		else if(formatImage == gli::RGBA8U)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, dimX, dimY, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureFileLoaded[0].data());
+		glBindTexture(GL_TEXTURE_2D, 0);
 
-      GLsizei dimX = textureFileLoaded[0].dimensions().x;
-      GLsizei dimY = textureFileLoaded[0].dimensions().y;
-
-      if ( formatImage == gli::RGB8U )
-      {
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,dimX,dimY,0,GL_RGB,GL_UNSIGNED_BYTE,textureFileLoaded[0].data());
-      }
-      else if ( formatImage == gli::RGBA8U )
-      {
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,dimX,dimY,0,GL_RGBA,GL_UNSIGNED_BYTE,textureFileLoaded[0].data());
-      }
-      glBindTexture(GL_TEXTURE_2D, 0);
-
-
-      itr++;
-    }
+		itr++;
+	}
 
     for (unsigned int m=0; m<m_assimpScene->mNumMaterials; m++)
     {
@@ -289,39 +265,37 @@ ModelAndTextureLoader_V2::ModelAndTextureLoader_V2(const char* TextureDirectory,
           m_textureOfEachMaterial[m].idNormal = 0;
         }
       }
-
-
-
     }
-
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-   
-
-
   }	
 }
 
 ModelAndTextureLoader_V2::~ModelAndTextureLoader_V2()
 {
-  glDeleteTextures(GLsizei(m_textureIdMap.size()), m_textureIds);
-  if (m_textureIds) { delete[] m_textureIds; m_textureIds = NULL; }
-  if ( m_textureOfEachMaterial ) { delete[] m_textureOfEachMaterial; m_textureOfEachMaterial = NULL; }
+	glDeleteTextures(GLsizei(m_textureIdMap.size()), &m_textureIds[0]);
 
-  m_textureIdMap.clear();
+	if(m_textureOfEachMaterial)
+	{
+		delete[] m_textureOfEachMaterial;
+		m_textureOfEachMaterial = NULL;
+	}
 
-  if ( m_assimpScene )
-  {
-    unsigned int iMesh = 0;
-    DeleteBuffers();
-  }
+	m_textureIdMap.clear();
 
+	if(m_assimpScene)
+		DeleteBuffers();
 
-  if ( m_myImporter ) { delete m_myImporter; m_myImporter = NULL; }
-  if(m_AdvmeshStruct)
-  {
-    delete [] m_AdvmeshStruct;
-    m_AdvmeshStruct = NULL;
-  }
+	if(m_myImporter)
+	{
+		delete m_myImporter; 
+		m_myImporter = NULL; 
+	}
+
+	if(m_AdvmeshStruct)
+	{
+		delete [] m_AdvmeshStruct;
+		m_AdvmeshStruct = NULL;
+	}
 }
 
 
