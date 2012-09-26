@@ -1,5 +1,5 @@
 
-#include <amd.hpp>
+#include <amd/amd.hpp>
 
 #include "ModelAndTextureLoader.hpp"
 
