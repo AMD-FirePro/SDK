@@ -183,7 +183,6 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 		m_textureIds = new GLuint[numTextures];
 		glGenTextures(numTextures, m_textureIds);
 
-
 		for (int i=0; i<numTextures; i++)
 		{
 			std::string filename = (*itr).first;

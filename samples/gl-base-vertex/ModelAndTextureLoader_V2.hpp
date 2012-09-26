@@ -1,4 +1,5 @@
-#pragma once
+#ifndef FIREPRO_SDK_MODEL_AND_TEXTURE_LOADER_V2_INCLUDED
+#define FIREPRO_SDK_MODEL_AND_TEXTURE_LOADER_V2_INCLUDED
 
 #include <glf/glf.hpp>
 
@@ -73,36 +74,42 @@ private:
 
 	void get_bounding_box_for_node (const  aiNode* nd,  aiVector3D* min,  aiVector3D* max,  aiMatrix4x4* trafo);
 	void get_bounding_box ( aiVector3D* min,  aiVector3D* max);
-  void get_buffer_size(unsigned int& size,const struct aiScene *sc, const struct aiNode* nd, unsigned int* currentMesh, unsigned int& BaseVertex);
-  void CreateBuffers(int size);
-  void FillVBO(const struct aiScene *sc, const struct aiNode* nd, unsigned int* currentMesh, unsigned int& VertexOffset, 
-               unsigned int& NormalOffset, unsigned int& TexCoordOffset, unsigned int& TangentOffset, unsigned int& BiTangentOffset);
+	void get_buffer_size(unsigned int& size,const struct aiScene *sc, const struct aiNode* nd, unsigned int* currentMesh, unsigned int& BaseVertex);
+	void CreateBuffers(int size);
+	void FillVBO(
+		const struct aiScene *sc, 
+		const struct aiNode* nd, 
+		unsigned int* currentMesh, 
+		unsigned int& VertexOffset, 
+		unsigned int& NormalOffset, 
+		unsigned int& TexCoordOffset, 
+		unsigned int& TangentOffset, 
+		unsigned int& BiTangentOffset);
 
 	void SetVertexFormat();
 	unsigned int m_nbTotalMesh;
 
+	struct AdvanceMesh
+	{
+		unsigned int nb3PointsFaces;//number of faces/ with 3 points (sometimes meshes have degenerated triangles with less than 3 points)
+		unsigned int MeshOffset; //base vertex
+		unsigned int* p3PointsFaces;//temp buffer for Indices. We will delete it as soon as we fill the BO
+		unsigned int IndicesOffset;
+		aiMatrix4x4 ModelMesh;  //fro the dragon all the meshes have the same matrix, but we need to be careful!!!! 
+	};
+	AdvanceMesh* m_AdvmeshStruct;
 
-  struct AdvanceMesh
-  {
-    unsigned int nb3PointsFaces;//number of faces/ with 3 points (sometimes meshes have degenerated triangles with less than 3 points)
-    unsigned int MeshOffset; //base vertex
-    unsigned int* p3PointsFaces;//temp buffer for Indices. We will delete it as soon as we fill the BO
-    unsigned int IndicesOffset;
-    aiMatrix4x4 ModelMesh;  //fro the dragon all the meshes have the same matrix, but we need to be careful!!!! 
-  };
-  AdvanceMesh* m_AdvmeshStruct;
+	unsigned int glBuffer_VertexBufferPositionSize;
+	unsigned int glBuffer_VertexBufferNormalSize;
+	unsigned int glBuffer_VertexBufferTextureCoorSize;
+	unsigned int glBuffer_VertexBufferTangentSize;
+	unsigned int glBuffer_VertexBufferBitangentSize;
 
-  unsigned int glBuffer_VertexBufferPositionSize;
-  unsigned int glBuffer_VertexBufferNormalSize;
-  unsigned int glBuffer_VertexBufferTextureCoorSize;
-  unsigned int glBuffer_VertexBufferTangentSize;
-  unsigned int glBuffer_VertexBufferBitangentSize;
+	unsigned int BufferID;
+	unsigned int IndicesBufferID;
+	unsigned int VAO_ID;
 
-  unsigned int BufferID;
-  unsigned int IndicesBufferID;
-  unsigned int VAO_ID;
-
-  const struct aiScene* m_assimpScene;
+	const struct aiScene* m_assimpScene;
 
 	// images / texture
 	std::map<std::string, unsigned int*> m_textureIdMap;	// map image filenames to textureIds
@@ -114,3 +121,4 @@ private:
 	glm::vec3 m_vCenter;
 };
 
+#endif//FIREPRO_SDK_MODEL_AND_TEXTURE_LOADER_V2_INCLUDED
