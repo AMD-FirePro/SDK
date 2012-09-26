@@ -1,8 +1,4 @@
-
-#include <amd/amd.hpp>
-
 #include "ModelAndTextureLoader_V2.hpp"
-
 
 namespace MySemantic
 {
@@ -92,66 +88,62 @@ namespace
 
   float rotateModel = 0.0f;
 
-  ModelAndTextureLoader_V2* fullModel;
-
+	ModelAndTextureLoader_V2* fullModel;
 }//namespace
 
 bool initProgram()
 {
-  bool Validated(true);
+	bool Validated(true);
 
-  glGenProgramPipelines(1, &PipelineName);
+	amd::compiler Compiler;
 
-  if(Validated)
-  {
-    GLuint VertShaderName = amd::createShader(GL_VERTEX_SHADER, std::string(), VERT_SHADER_SOURCE);
+	glGenProgramPipelines(1, &PipelineName);
 
-    ProgramName[program::VERTEX] = glCreateProgram();
-    glProgramParameteri(ProgramName[program::VERTEX], GL_PROGRAM_SEPARABLE, GL_TRUE);
-    glAttachShader(ProgramName[program::VERTEX], VertShaderName);
-    glLinkProgram(ProgramName[program::VERTEX]);
-    glDeleteShader(VertShaderName);
-    Validated = Validated && amd::checkProgram(ProgramName[program::VERTEX]);
+	if(Validated)
+	{
+		GLuint VertShaderName = Compiler.create(GL_VERTEX_SHADER, VERT_SHADER_SOURCE);
 
-    for(int i=1; i<program::MAX; i++)
-    {
-      ProgramName[i] = glCreateProgram();
-      glProgramParameteri(ProgramName[i], GL_PROGRAM_SEPARABLE, GL_TRUE);
+		ProgramName[program::VERTEX] = glCreateProgram();
+		glProgramParameteri(ProgramName[program::VERTEX], GL_PROGRAM_SEPARABLE, GL_TRUE);
+		glAttachShader(ProgramName[program::VERTEX], VertShaderName);
+		glLinkProgram(ProgramName[program::VERTEX]);
+		glDeleteShader(VertShaderName);
+		Validated = Validated && amd::checkProgram(ProgramName[program::VERTEX]);
 
-      std::string presenceDefine;
-      if ( i == program::FRAGMENT__PresenceAll )
-      {
-        presenceDefine = "#version 420 core\n  #define PRESENCE_NORMALTEXTURE\n  #define PRESENCE_DIFFUSETEXTURE\n  #define PRESENCE_TEXTCOORD\n  #define PRESENCE_SPECULARTEXTURE\n  #define PRESENCE_TBN\n  ";
-      }
-      else if ( i == program::FRAGMENT__Nothing )
-      {
-        presenceDefine = "#version 420 core\n  ";
-      }
-      else if ( i == program::FRAGMENT__DiffuseTexture_TextCoord )
-      {
-        presenceDefine = "#version 420 core\n  #define PRESENCE_DIFFUSETEXTURE\n  #define PRESENCE_TEXTCOORD\n  ";
-      }
-      else 
-      {
-        presenceDefine = "#version 420 core\n  ";
-      }
+		for(int i=1; i<program::MAX; i++)
+		{
+			ProgramName[i] = glCreateProgram();
+			glProgramParameteri(ProgramName[i], GL_PROGRAM_SEPARABLE, GL_TRUE);
 
-      GLuint FragShaderName = amd::createShader(GL_FRAGMENT_SHADER, presenceDefine, FRAG_SHADER_SOURCE);
+			std::string Arguments;
+			if(i == program::FRAGMENT__PresenceAll)
+				Arguments = "--version 420 --profile core -DPRESENCE_NORMALTEXTURE -DPRESENCE_DIFFUSETEXTURE -DPRESENCE_TEXTCOORD -DPRESENCE_SPECULARTEXTURE -DPRESENCE_TBN";
+			else if ( i == program::FRAGMENT__Nothing )
+				Arguments = "--version 420 --profile core";
+			else if(i == program::FRAGMENT__DiffuseTexture_TextCoord)
+				Arguments = "--version 420 --profile core -DPRESENCE_DIFFUSETEXTURE -DPRESENCE_TEXTCOORD";
+			else 
+				Arguments = "--version 420 --profile core";
 
-      glAttachShader(ProgramName[i], FragShaderName);
-      glLinkProgram(ProgramName[i]);
-      glDeleteShader(FragShaderName);
-      Validated = Validated && amd::checkProgram(ProgramName[i]);
-    }
-  }
+			GLuint FragShaderName = Compiler.create(GL_FRAGMENT_SHADER, FRAG_SHADER_SOURCE, Arguments);
+			Validated = Validated && Compiler.check();
 
-  if(Validated)
-  {
-    glUseProgramStages(PipelineName, GL_VERTEX_SHADER_BIT, ProgramName[program::VERTEX]);
-    glUseProgramStages(PipelineName, GL_FRAGMENT_SHADER_BIT, ProgramName[program::FRAGMENT__PresenceAll]);
-  }
+			glAttachShader(ProgramName[i], FragShaderName);
+			glLinkProgram(ProgramName[i]);
+			glDeleteShader(FragShaderName);
+			Validated = Validated && amd::checkProgram(ProgramName[i]);
 
-  return Validated;
+			assert(!Validated);
+		}
+	}
+
+	if(Validated)
+	{
+		glUseProgramStages(PipelineName, GL_VERTEX_SHADER_BIT, ProgramName[program::VERTEX]);
+		glUseProgramStages(PipelineName, GL_FRAGMENT_SHADER_BIT, ProgramName[program::FRAGMENT__PresenceAll]);
+	}
+
+	return Validated;
 }
 
 

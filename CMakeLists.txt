@@ -64,14 +64,19 @@ endif(MSVC AND CMAKE_CL_64)
 set(FREEGLUT_LIBRARY freeglut_static)
 
 add_definitions(-DFREEGLUT_STATIC)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/freeglut-2.6.0)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/freeglut-2.6.0/lib/${FREEGLUT_BINARY_DIRECTORY})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/freeglut-2.8.0)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/freeglut-2.8.0/lib/${FREEGLUT_BINARY_DIRECTORY})
 
 if(WIN32)
 	set(FREEGLUT_LIBRARY freeglut_static)
 elseif(UNIX)
 	set(FREEGLUT_LIBRARY freeglut)
 endif(WIN32)
+
+################################
+# Add GLF 
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/glf)
 
 ################################
 # Add GLM 
@@ -95,8 +100,8 @@ if(MSVC AND CMAKE_CL_64)
 endif(MSVC AND CMAKE_CL_64)
 
 add_definitions(-DGLEW_STATIC)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/glew-1.7.0/include)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/glew-1.7.0/lib/${GLEW_BINARY_DIRECTORY})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/glew-1.9.0/include)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/glew-1.9.0/lib/${GLEW_BINARY_DIRECTORY})
 
 if(WIN32)
 	set(GLEW_LIBRARY glew32s)

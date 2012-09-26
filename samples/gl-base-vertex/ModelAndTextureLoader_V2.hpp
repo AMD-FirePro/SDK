@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glf/glf.hpp>
+
 #include <vector>
 #include <map>
 #include <string>
@@ -12,7 +14,6 @@
 
 #define aisgl_min(x,y) (x<y?x:y)
 #define aisgl_max(x,y) (y>x?y:x)
-
 
 class ModelAndTextureLoader_V2
 {
@@ -77,7 +78,7 @@ private:
   void FillVBO(const struct aiScene *sc, const struct aiNode* nd, unsigned int* currentMesh, unsigned int& VertexOffset, 
                unsigned int& NormalOffset, unsigned int& TexCoordOffset, unsigned int& TangentOffset, unsigned int& BiTangentOffset);
 
-  void SetVertexFormat();
+	void SetVertexFormat();
 	unsigned int m_nbTotalMesh;
 
 
@@ -105,7 +106,7 @@ private:
 
 	// images / texture
 	std::map<std::string, unsigned int*> m_textureIdMap;	// map image filenames to textureIds
-	unsigned int* m_textureIds;							// pointer to texture Array
+	std::vector<GLuint> m_textureIds;
 	MATERIAL_TEXTUREID* m_textureOfEachMaterial;
 	Assimp::Importer* m_myImporter;
 
