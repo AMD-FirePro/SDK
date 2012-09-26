@@ -68,7 +68,7 @@ namespace glf
 	};
 
 	int version(int Major, int Minor);
-	int run();
+	int run(int argc, char* argv[], glm::ivec2 const & Size, int Profile, int Major, int Minor);
 
 	struct vertexattrib
 	{
