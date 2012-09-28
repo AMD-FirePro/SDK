@@ -258,19 +258,13 @@ bool begin()
 	if(Success && amd::checkExtension("GL_ARB_debug_output"))
 		Success = initDebugOutput();
 	if(Success)
+		Success = initBuffers();
+	if(Success)
 		Success = initModels();
 	if(Success)
 		Success = initProgram();
 	if(Success)
 		Success = initFBOandTextures();
-
-	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
-	glClearDepth(1.0);
-
-	glBindBufferBase(GL_UNIFORM_BUFFER, MySemantic::uniform::TRANSFORM, BufferName[buffer::TRANSFORM]);
-	glBindBufferBase(GL_UNIFORM_BUFFER, MySemantic::uniform::LIGHT, BufferName[buffer::LIGHT]);
-
-	glEnable(GL_DEPTH_TEST);
 
 	return Success && amd::checkError("Init");
 }
@@ -291,8 +285,7 @@ void SetUpMatrices()
 	glm::mat4 MV_P_System[4];
 
 	glBindBuffer(GL_UNIFORM_BUFFER, BufferName[buffer::TRANSFORM]);
-	glm::mat4* Pointer = (glm::mat4*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, 4*sizeof(glm::mat4), 
-	GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+	glm::mat4* Pointer = (glm::mat4*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, 4*sizeof(glm::mat4), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
 
 	// scale the whole asset to fit into our view frustum 
 	glm::mat4 Scale =  glm::scale(glm::mat4(1.0f), glm::vec3(tmp));  
@@ -376,7 +369,11 @@ void recursiveMeshRendering(const struct aiScene *sc, const struct aiNode* nd, u
 void display()
 {
 	//clear back buffer
+	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
+	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glEnable(GL_DEPTH_TEST);
 
 	glBindVertexArray(VertexArrayName);
 
@@ -394,12 +391,16 @@ void display()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
   
 	SwicthProgram(ProgramResName);
+
 	GLenum buffers[] = {GL_BACK_LEFT,GL_BACK_RIGHT};
 	glDrawBuffers(2, buffers);
+
 	glBindVertexArray(VertexArrayDrawQuadName);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, stereoColorTexARRAY);  
+	glBindBufferBase(GL_UNIFORM_BUFFER, MySemantic::uniform::TRANSFORM, BufferName[buffer::TRANSFORM]);
+	glBindBufferBase(GL_UNIFORM_BUFFER, MySemantic::uniform::LIGHT, BufferName[buffer::LIGHT]);
+
 	glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_SHORT, NULL);
-	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 
 	// Swap framebuffers
 	amd::swapBuffers();

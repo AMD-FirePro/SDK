@@ -134,7 +134,7 @@ bool initModels()
 {
 	bool Validated(true);
 
-	fullModel = new ModelAndTextureLoader((amd::DATA_DIRECTORY+"dragon2_LQ\\").c_str(),(amd::DATA_DIRECTORY +  "dragon2_LQ\\dragon2.obj"  ).c_str()); 
+	fullModel = new ModelAndTextureLoader((amd::SHARED_DATA_DIRECTORY+"dragon2_LQ\\").c_str(),(amd::SHARED_DATA_DIRECTORY +  "dragon2_LQ\\dragon2.obj"  ).c_str()); 
 
 	return Validated;
 }
@@ -210,7 +210,7 @@ void recursiveMeshRendering(const struct aiScene *sc, const struct aiNode* nd, u
 	{
 		const struct aiMesh* mesh = sc->mMeshes[nd->mMeshes[n]];
 
-	//apply material
+		//apply material
 		const struct aiMaterial* material = sc->mMaterials[mesh->mMaterialIndex];
 
 		ModelAndTextureLoader::MATERIAL_TEXTUREID textureIDs = fullModel->GetGLtextureOfMaterial(mesh->mMaterialIndex);
@@ -242,7 +242,6 @@ void display()
 {
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(true);
-
 	
 	// Update of the uniform buffer
 	{
@@ -282,7 +281,6 @@ void display()
 		glm::vec4 lookAtVector = - glm::normalize( glm::vec4(View[0][2], View[1][2], View[2][2], 0.0f) );
 		glm::vec4 lightDirection = glm::normalize( glm::vec4(0.3f, -0.1f, -1.0f, 0.0f) );
 
-
 		uniformBufferUpdatedEachFrame->mMtoS = Projection * View * Model;
 		uniformBufferUpdatedEachFrame->lightDirectionNormalizedWS = lightDirection;
 		uniformBufferUpdatedEachFrame->viewDirectionNormalizedWS = lookAtVector;
@@ -293,7 +291,6 @@ void display()
 		// Make sure the uniform buffer is uploaded
 		glUnmapBuffer(GL_UNIFORM_BUFFER);
 	}
-	
 
 	glViewportIndexedf(0, 0, 0, GLfloat(Window.Size.x), GLfloat(Window.Size.y));
 	glClearBufferfv(GL_COLOR, 0, &glm::vec4(0.7f, 0.8f, 1.0f, 1.0f)[0]);
@@ -302,8 +299,6 @@ void display()
 	glClearBufferfv(GL_DEPTH, 0, &clearDepthValue);
 	const GLint clearStencilValue = 0;
 	glClearBufferiv(GL_STENCIL, 0, &clearStencilValue);
-
-
 
 	// Bind rendering objects
 	glBindProgramPipeline(PipelineName);

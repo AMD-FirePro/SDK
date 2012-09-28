@@ -43,6 +43,7 @@
 namespace amd
 {
 	static std::string const DATA_DIRECTORY("./data/");
+	static std::string const SHARED_DATA_DIRECTORY("../../data/");
 
 	enum mouse_button
 	{

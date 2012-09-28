@@ -162,6 +162,22 @@ if(MSVC)
 endif(MSVC)
 
 ################################
+# Add custom target to copy all data
+
+set(TARGET_DATA_COPY DATA_COPY)
+if(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
+	add_custom_target(
+		${TARGET_DATA_COPY}
+ 		COMMAND ${CMAKE_COMMAND} -E echo "In source build")
+else(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
+	add_custom_target(
+		${TARGET_DATA_COPY}
+ 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/data ${CMAKE_CURRENT_BINARY_DIR}/data)
+endif(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
+
+set(OGL_DATA_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/data)
+
+################################
 # function to create a project for the sample in the solution
 
 function(createSample NAME)
@@ -182,6 +198,7 @@ function(createSample NAME)
 	add_custom_command(
 		TARGET ${NAME} POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy ${ASSIMP_BINARY} ${CMAKE_CURRENT_BINARY_DIR})
+	add_dependencies(${NAME} ${TARGET_DATA_COPY})
 
 	target_link_libraries(${NAME} ${GL_LIBRARY} ${CL_LIBRARY} ${GLEW_LIBRARY} ${FREEGLUT_LIBRARY} ${ASSIMP_LIBRARY})
 endfunction(createSample)
@@ -204,6 +221,7 @@ function(createSampleWGL NAME)
 	add_custom_command(
 		TARGET ${NAME} POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy ${ASSIMP_BINARY} ${CMAKE_CURRENT_BINARY_DIR})
+	add_dependencies(${NAME} ${TARGET_DATA_COPY})
 
 	target_link_libraries(${NAME} ${GL_LIBRARY} ${CL_LIBRARY} ${GLEW_LIBRARY} ${FREEGLUT_LIBRARY} ${ASSIMP_LIBRARY})
 endfunction(createSampleWGL)

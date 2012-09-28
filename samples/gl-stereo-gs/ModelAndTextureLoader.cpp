@@ -108,9 +108,7 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 		unsigned int iMesh = 0;
 		RecursiveMesh_Loading(m_assimpScene,m_assimpScene->mRootNode,&iMesh);
 	
-
-
-
+/*
 		//load textures
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -266,13 +264,10 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 					m_textureOfEachMaterial[m].idNormal = 0;
 				}
 			}
-
-			
-
 		}
 
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-
+*/
 	}	
 }
 

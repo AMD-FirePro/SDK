@@ -56,13 +56,10 @@ void ModelAndTextureLoader::get_bounding_box ( aiVector3D* min,  aiVector3D* max
 	get_bounding_box_for_node(m_assimpScene->mRootNode,min,max,&trafo);
 }
 
-ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const char* fullPathToModel)
+ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const char* fullPathToModel) :
+	m_nbTotalMesh(0),
+	m_allMeshes(NULL)
 {
-	m_nbTotalMesh = 0;
-	m_allMeshes = NULL;
-
-
-
 	//Before Assimp 3.0 :
 	//force to recompute normal tangent and bitangent
 	//Assimp::Importer::SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS, aiComponent_NORMALS);
@@ -189,6 +186,7 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 			(*itr).second = &m_textureIds[i];
 
 			gli::texture2D textureFileLoaded = gli::load(std::string(TextureDirectory) + filename);
+			assert(!textureFileLoaded.empty());
 
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, m_textureIds[i]);
