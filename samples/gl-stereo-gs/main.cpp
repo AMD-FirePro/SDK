@@ -244,7 +244,7 @@ bool initModels()
 {
 	bool Validated(true);
 
-	fullModel = new ModelAndTextureLoader(amd::DATA_DIRECTORY.c_str(), (amd::DATA_DIRECTORY +  "duck.dae"  ).c_str()); 
+	fullModel = new ModelAndTextureLoader((amd::SHARED_DATA_DIRECTORY+"dragon2_LQ\\").c_str(),(amd::SHARED_DATA_DIRECTORY +  "dragon2_LQ\\dragon2.obj"  ).c_str()); 
 
 	return Validated;
 }
@@ -412,7 +412,7 @@ int main(int argc, char* argv[])
 	return amd::run(
 		argc, argv,
 		glm::ivec2(::gWidth, ::gHeight), 8, 
-		WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB, ::SAMPLE_MAJOR_VERSION, 
+		WGL_CONTEXT_CORE_PROFILE_BIT_ARB, ::SAMPLE_MAJOR_VERSION, 
 		::SAMPLE_MINOR_VERSION);
 }
 
