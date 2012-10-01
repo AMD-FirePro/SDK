@@ -194,11 +194,11 @@ namespace glf
 		glShaderSource(Name, 1, &PreprocessedSourcePointer, NULL);
 		glCompileShader(Name);
 
-		std::pair<files_map::iterator, bool> ResultFiles = this->ShaderFiles.insert(std::make_pair(Name, Filename));
+		std::pair<files_map::iterator, bool> ResultFiles = this->ShaderFiles.insert(std::make_pair(Name, Filename + Arguments));
 		assert(ResultFiles.second);
-		std::pair<names_map::iterator, bool> ResultNames = this->ShaderNames.insert(std::make_pair(Filename, Name));
+		std::pair<names_map::iterator, bool> ResultNames = this->ShaderNames.insert(std::make_pair(Filename + Arguments, Name));
 		assert(ResultNames.second);
-		std::pair<names_map::iterator, bool> ResultChecks = this->PendingChecks.insert(std::make_pair(Filename, Name));
+		std::pair<names_map::iterator, bool> ResultChecks = this->PendingChecks.insert(std::make_pair(Filename + Arguments, Name));
 		assert(ResultChecks.second);
 
 		return Name;

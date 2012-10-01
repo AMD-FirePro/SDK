@@ -18,7 +18,7 @@ namespace MySemantic
 
 namespace
 {
-  std::string const SAMPLE_NAME("OpenGL - Classic Lighting");
+  std::string const SAMPLE_NAME("OpenGL - Base Vertex");
   std::string const VERT_SHADER_SOURCE(amd::DATA_DIRECTORY + "lighting.vert");
   std::string const FRAG_SHADER_SOURCE(amd::DATA_DIRECTORY + "lighting.frag");
   int const SAMPLE_SIZE_WIDTH(640);
@@ -102,6 +102,8 @@ bool initProgram()
 	if(Validated)
 	{
 		GLuint VertShaderName = Compiler.create(GL_VERTEX_SHADER, VERT_SHADER_SOURCE);
+		Validated = Validated && Compiler.check();
+		assert(Validated);
 
 		ProgramName[program::VERTEX] = glCreateProgram();
 		glProgramParameteri(ProgramName[program::VERTEX], GL_PROGRAM_SEPARABLE, GL_TRUE);
@@ -133,7 +135,7 @@ bool initProgram()
 			glDeleteShader(FragShaderName);
 			Validated = Validated && amd::checkProgram(ProgramName[i]);
 
-			assert(!Validated);
+			assert(Validated);
 		}
 	}
 
