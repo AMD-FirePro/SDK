@@ -176,7 +176,7 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 			}
 		}
 
-		int numTextures = m_textureIdMap.size();
+		int numTextures = int(m_textureIdMap.size());
 
 		std::map<std::string, GLuint*>::iterator itr = m_textureIdMap.begin();
 
