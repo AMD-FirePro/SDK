@@ -238,15 +238,27 @@ namespace glf
 #endif
 	static void keyboard(unsigned char key, int x, int y)
 	{
-		++Window.KeyPressed[32];
+		++Window.KeyPressed[key];
 
 		switch(key) 
 		{
 		case 27:
 			end();
 			exit(0);
-
-			//exit(end());
+		case 'w':
+			Window.WireFrame = !Window.WireFrame;
+			break;
+		case 'm':
+			Window.DrawInputMesh = !Window.DrawInputMesh;
+			break;
+		case 'n':
+			Window.AddNoise = !Window.AddNoise;
+			break;
+		case 's':
+			Window.PhongTess = !Window.PhongTess;
+			break;
+		default:
+			++Window.KeyPressed[key];
 			break;
 		}
 	}

@@ -65,6 +65,10 @@ namespace glf
 		glm::vec2 RotationCurrent;
 		int MouseButtonFlags;
 		std::size_t KeyPressed[256];
+		bool WireFrame;
+		bool DrawInputMesh;
+		bool AddNoise;
+		bool PhongTess;
 	};
 
 	int version(int Major, int Minor);
