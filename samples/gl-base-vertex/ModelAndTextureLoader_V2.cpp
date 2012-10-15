@@ -192,7 +192,14 @@ ModelAndTextureLoader_V2::ModelAndTextureLoader_V2
 		std::string filename = (*itr).first;
 		(*itr).second = &m_textureIds[i];
 
+		std::clock_t Start = clock();
+
 		gli::texture2D textureFileLoaded = gli::load(std::string(TextureDirectory) + filename);
+		assert(!textureFileLoaded.empty());
+
+		std::clock_t End = clock();
+		std::clock_t Time = End - Start;
+		printf("Time %d\n", Time);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, m_textureIds[i]);
@@ -203,9 +210,9 @@ ModelAndTextureLoader_V2::ModelAndTextureLoader_V2
 		GLsizei dimY = textureFileLoaded[0].dimensions().y;
 
 		if(formatImage == gli::RGB8U)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, dimX, dimY, 0, GL_RGB, GL_UNSIGNED_BYTE, textureFileLoaded[0].data());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, dimX, dimY, 0, GL_BGR, GL_UNSIGNED_BYTE, textureFileLoaded[0].data());
 		else if(formatImage == gli::RGBA8U)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, dimX, dimY, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureFileLoaded[0].data());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, dimX, dimY, 0, GL_BGRA, GL_UNSIGNED_BYTE, textureFileLoaded[0].data());
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		itr++;

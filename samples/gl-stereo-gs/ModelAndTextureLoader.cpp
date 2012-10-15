@@ -276,7 +276,7 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 
 ModelAndTextureLoader::~ModelAndTextureLoader()
 {
-	glDeleteTextures(m_textureIdMap.size(),m_textureIds);
+	glDeleteTextures(GLsizei(m_textureIdMap.size()), m_textureIds);
 	if (m_textureIds) { delete[] m_textureIds; m_textureIds = NULL; }
 	if ( m_textureOfEachMaterial ) { delete[] m_textureOfEachMaterial; m_textureOfEachMaterial = NULL; }
 
