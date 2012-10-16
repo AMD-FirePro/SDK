@@ -148,117 +148,100 @@ bool initProgram()
 	return Validated;
 }
 
-
-bool initTexture()
-{
-  bool Validated(true);
-
-  return Validated;
-}
-
-
-
-
 bool initModels()
 {
-  bool Validated(true);
+	bool Validated(true);
 
-  //fullModel = new ModelAndTextureLoader((amd::DATA_DIRECTORY+"F40\\").c_str(),(amd::DATA_DIRECTORY +  "F40\\F40.OBJ"  ).c_str()); 
-  //fullModel = new ModelAndTextureLoader((amd::DATA_DIRECTORY+"batman\\texture\\").c_str(),(amd::DATA_DIRECTORY +  "batman\\batman.OBJ"  ).c_str()); 
-  //fullModel = new ModelAndTextureLoader((amd::DATA_DIRECTORY+"spider\\").c_str(),(amd::DATA_DIRECTORY +  "spider\\spider.OBJ"  ).c_str()); 
-  fullModel = new ModelAndTextureLoader_V2((amd::DATA_DIRECTORY+"dragon2\\").c_str(),(amd::DATA_DIRECTORY +  "dragon2\\dragon2.obj"  ).c_str()); 
+	fullModel = new ModelAndTextureLoader_V2((amd::DATA_DIRECTORY+"dragon2\\").c_str(),(amd::DATA_DIRECTORY +  "dragon2\\dragon2.obj"  ).c_str()); 
 
-  CurrentMat.ambiant=glm::vec4(-1.0);
-  CurrentMat.diffuse=glm::vec4(-1.0);
-  return Validated;
+	CurrentMat.ambiant=glm::vec4(-1.0);
+	CurrentMat.diffuse=glm::vec4(-1.0);
+	return Validated;
 }
 
 bool initDebugOutput()
 {
 #ifdef _DEBUG
-  bool Validated(true);
+	bool Validated(true);
 
-  glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
-  glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
-  glDebugMessageCallbackARB(&amd::debugOutput, NULL);
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
+	glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+	glDebugMessageCallbackARB(&amd::debugOutput, NULL);
 
-  return Validated;
+	return Validated;
 #else
-  return true;
+	return true;
 #endif
 }
 
 
 bool initBuffer()
 {
+	glGenBuffers(buffer::MAX, BufferName);
 
-  glGenBuffers(buffer::MAX, BufferName);
+	glBindBuffer(GL_UNIFORM_BUFFER, BufferName[buffer::UNIFORM_UPDATE_EACH_FRAME]);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(UPDATE_EACH_FRAME), NULL, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);	
 
-  glBindBuffer(GL_UNIFORM_BUFFER, BufferName[buffer::UNIFORM_UPDATE_EACH_FRAME]);
-  glBufferData(GL_UNIFORM_BUFFER, sizeof(UPDATE_EACH_FRAME), NULL, GL_DYNAMIC_DRAW);
-  glBindBuffer(GL_UNIFORM_BUFFER, 0);	
+	glBindBuffer(GL_UNIFORM_BUFFER, BufferName[buffer::UNIFORM_MATERIAL]);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(MATERIAL), NULL, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);	
 
-  glBindBuffer(GL_UNIFORM_BUFFER, BufferName[buffer::UNIFORM_MATERIAL]);
-  glBufferData(GL_UNIFORM_BUFFER, sizeof(MATERIAL), NULL, GL_DYNAMIC_DRAW);
-  glBindBuffer(GL_UNIFORM_BUFFER, 0);	
-
-
-  return true;
+	return true;
 }
 
 void BindFragmentProgram(GLuint FragProgram)
 {
-  if (CurrentFragProgram!=FragProgram)
-  {
-    glUseProgramStages(PipelineName, GL_FRAGMENT_SHADER_BIT, FragProgram);
-    CurrentFragProgram=FragProgram;
-  }
+	if (CurrentFragProgram!=FragProgram)
+	{
+		glUseProgramStages(PipelineName, GL_FRAGMENT_SHADER_BIT, FragProgram);
+		CurrentFragProgram=FragProgram;
+	}
 }
 
 bool begin()
 {
-  bool Validated(true);
-  Validated = Validated && amd::checkGLVersion(SAMPLE_MAJOR_VERSION, SAMPLE_MINOR_VERSION);
+	bool Validated(true);
+	Validated = Validated && amd::checkGLVersion(SAMPLE_MAJOR_VERSION, SAMPLE_MINOR_VERSION);
 
-  //move origin camera
-  Window.TranlationCurrent.y = 30;
-  Window.TranlationOrigin.y = Window.TranlationCurrent.y;
-  Window.RotationCurrent.y = 10;
-  Window.RotationOrigin.y = Window.RotationCurrent.y;
-  Window.RotationCurrent.x = 40;
-  Window.RotationOrigin.x = Window.RotationCurrent.x;
+	//move origin camera
+	Window.TranlationCurrent.y = 30;
+	Window.TranlationOrigin.y = Window.TranlationCurrent.y;
+	Window.RotationCurrent.y = 10;
+	Window.RotationOrigin.y = Window.RotationCurrent.y;
+	Window.RotationCurrent.x = 40;
+	Window.RotationOrigin.x = Window.RotationCurrent.x;
 
-  if(Validated && amd::checkExtension("GL_ARB_debug_output"))
-    Validated = initDebugOutput();
-  if(Validated)
-    Validated = initTexture();
-  if(Validated)
-    Validated = initProgram();
-  if(Validated)
-    Validated = initBuffer();
-  if(Validated)
-    Validated = initModels();
+	if(Validated && amd::checkExtension("GL_ARB_debug_output"))
+		Validated = initDebugOutput();
+	if(Validated)
+		Validated = initProgram();
+	if(Validated)
+		Validated = initBuffer();
+	if(Validated)
+		Validated = initModels();
 
-
-  return Validated;
+	return Validated;
 }
 
 bool end()
 {
-  bool Validated(true);
+	bool Validated(true);
 
-  glDeleteProgramPipelines(1, &PipelineName);
+	glDeleteProgramPipelines(1, &PipelineName);
 
-  for(int i=0; i<program::MAX; i++)
-  {
-    glDeleteProgram(ProgramName[i]);
-  }
+	for(int i=0; i<program::MAX; i++)
+		glDeleteProgram(ProgramName[i]);
 
-  glDeleteBuffers(buffer::MAX, BufferName);
+	glDeleteBuffers(buffer::MAX, BufferName);
 
-  if ( fullModel ) { delete fullModel; fullModel = NULL; }
+	if(fullModel) 
+	{
+		delete fullModel; 
+		fullModel = NULL; 
+	}
 
-  return Validated;
+	return Validated;
 }
 
 
@@ -445,9 +428,10 @@ void display()
 
 int main(int argc, char* argv[])
 {
-  return amd::run(
-    argc, argv,
-    glm::ivec2(::SAMPLE_SIZE_WIDTH, ::SAMPLE_SIZE_HEIGHT),  8, 
-    WGL_CONTEXT_CORE_PROFILE_BIT_ARB, 
-    ::SAMPLE_MAJOR_VERSION, ::SAMPLE_MINOR_VERSION);
+	return amd::run(
+		argc, argv,
+		glm::ivec2(::SAMPLE_SIZE_WIDTH, ::SAMPLE_SIZE_HEIGHT),
+		8, 
+		WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+		::SAMPLE_MAJOR_VERSION, ::SAMPLE_MINOR_VERSION);
 }

@@ -192,14 +192,8 @@ ModelAndTextureLoader_V2::ModelAndTextureLoader_V2
 		std::string filename = (*itr).first;
 		(*itr).second = &m_textureIds[i];
 
-		std::clock_t Start = clock();
-
 		gli::texture2D textureFileLoaded = gli::load(std::string(TextureDirectory) + filename);
 		assert(!textureFileLoaded.empty());
-
-		std::clock_t End = clock();
-		std::clock_t Time = End - Start;
-		printf("Time %d\n", Time);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, m_textureIds[i]);
