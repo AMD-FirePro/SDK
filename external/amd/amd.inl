@@ -8,6 +8,7 @@ bool check();
 bool begin();
 bool end();
 void display();
+void setup();
 
 namespace amd
 {
@@ -356,6 +357,15 @@ namespace amd
 		case 'm':
 			Window.DrawInputMesh = !Window.DrawInputMesh;
             break;
+		case 'n':
+			Window.AddNoise = !Window.AddNoise;
+            break;
+		case 's':
+			Window.PhongTess = !Window.PhongTess;
+            break;
+		case 'c':
+			Window.FrustumCull = !Window.FrustumCull;
+            break;
 		default:
 			++Window.KeyPressed[key];
 			break;
@@ -504,6 +514,9 @@ namespace amd
 			glutCloseFunc(amd::close);
 			glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 #endif//__APPLE__
+
+			setup();
+
 			glutMainLoop();
 
 			return 0;
