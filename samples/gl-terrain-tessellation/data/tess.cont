@@ -1,0 +1,81 @@
+#version 420 core
+
+layout(vertices = 4) out;
+
+uniform vec4 frustumPlanes[6];
+uniform mat4 matMVP;
+uniform mat4 matView;
+uniform mat4 matProj;
+
+in block
+{
+    vec3 position;
+	vec3 normal;
+	vec2 texCoord;
+} In[];
+
+out block
+{
+    vec3 position;
+	vec3 normal;
+	vec2 texCoord;
+} Out[];
+
+float AdaptiveTessellation(vec3 p0, vec3 p1)
+{
+    vec3 center = (p0+p1)*0.5f;
+	vec4 clip2 = matView * vec4(center, 1.0);
+	vec4 clip4 = matView * vec4(0,0,0, 1.0);
+	float cameraDist = length(clip2.xyz);
+	float cameraDistFromCenter = length(clip4.xyz);
+
+	vec4 clip0 = matMVP * vec4(p0, 1.0);
+	vec4 clip1 = matMVP * vec4(p1, 1.0);
+	const float d = distance(clip0, clip1);
+	float terrTessTriSize = 12.0f;
+	return (1+clamp((cameraDistFromCenter*2/cameraDist)*(d / terrTessTriSize), 0, 31));
+
+}
+
+bool RegtangleOutFrustum( vec3 rec[4], float radius)
+{
+   //#pragma unroll
+   for( uint plane = 0; plane < 6; plane++ )
+   {   
+       bool r = true;
+	   for ( uint v = 0; v < 4; v++ )
+	   {
+		  if (dot(frustumPlanes[plane].xyz, rec[v]) + frustumPlanes[plane].w < radius )
+			 r= r&&true;
+		  else r=r&&false;
+	   }
+	   if (r) return true;
+   }
+   return false;
+}
+void main()
+{	 
+
+	Out[gl_InvocationID].position = In[gl_InvocationID].position;
+	Out[gl_InvocationID].normal = In[gl_InvocationID].normal;
+	Out[gl_InvocationID].texCoord = In[gl_InvocationID].texCoord;
+
+	vec3 rec[4];
+	rec[0]=In[0].position;rec[1]=In[1].position;rec[2]=In[2].position;rec[3]=In[3].position;
+	float radius = max(length(rec[0]-rec[2]),length(rec[1]-rec[3]))*(-0.5f);
+    if (RegtangleOutFrustum(rec, radius))
+	{
+		gl_TessLevelOuter[0]=gl_TessLevelOuter[1]=gl_TessLevelOuter[2]=gl_TessLevelOuter[3]=-1;
+	}
+	else 
+	{
+		gl_TessLevelOuter[0] = AdaptiveTessellation(In[0].position, In[3].position);
+		gl_TessLevelOuter[1] = AdaptiveTessellation(In[0].position, In[1].position);
+		gl_TessLevelOuter[2] = AdaptiveTessellation(In[1].position, In[2].position);
+		gl_TessLevelOuter[3] = AdaptiveTessellation(In[3].position, In[2].position);
+	}
+    
+	gl_TessLevelInner[0]=gl_TessLevelInner[1]=(gl_TessLevelOuter[0]+gl_TessLevelOuter[1]+gl_TessLevelOuter[2]+gl_TessLevelOuter[3])*0.25f;
+
+}
+
