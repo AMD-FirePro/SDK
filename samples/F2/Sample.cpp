@@ -3,7 +3,6 @@
 #include "rendermanager.hpp"
 #include "glslshader.hpp"
 
-#include <assimp.h>
 #include "ModelAndTextureLoader.hpp"
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -433,7 +432,7 @@ void  GLSample::recursiveMeshRendering(const struct aiScene *sc, const struct ai
 
 		//glActiveTexture(GL_TEXTURE1);
 		//glBindTexture(GL_TEXTURE_2D, textureIDs.idNormal);	
-	
+
 		//glActiveTexture(GL_TEXTURE2);
 		//glBindTexture(GL_TEXTURE_2D, textureIDs.idSpecular);	
 
@@ -669,5 +668,3 @@ void GLSample::Render()
 	glFlush();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////

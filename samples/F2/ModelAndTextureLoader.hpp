@@ -4,10 +4,12 @@
 #include <map>
 #include <string>
 #include <glm/glm.hpp>
-//
-#include <assimp.hpp>      // C++ importer interface
-#include <aiScene.h>       // Output data structure
-#include <aiPostProcess.h> // Post processing flags
+
+#include <assimp/cimport.h>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <assimp\Importer.hpp>
+
 
 #define aisgl_min(x,y) (x<y?x:y)
 #define aisgl_max(x,y) (y>x?y:x)
@@ -52,8 +54,8 @@ private:
 	void RecursiveMesh_Loading(const struct aiScene *sc, const struct aiNode* nd, unsigned int* currentMesh);
 	void RecursiveMesh_Delete(const struct aiScene *sc, const struct aiNode* nd, unsigned int* currentMesh);
 
-	void get_bounding_box_for_node (const struct aiNode* nd, struct aiVector3D* min, struct aiVector3D* max, struct aiMatrix4x4* trafo);
-	void get_bounding_box (struct aiVector3D* min, struct aiVector3D* max);
+	void get_bounding_box_for_node (const  aiNode* nd,  aiVector3D* min,  aiVector3D* max,  aiMatrix4x4* trafo);
+	void get_bounding_box ( aiVector3D* min,  aiVector3D* max);
 
 	unsigned int m_nbTotalMesh;
 
@@ -80,8 +82,8 @@ private:
 	std::map<std::string, unsigned int*> m_textureIdMap;	// map image filenames to textureIds
 	unsigned int* m_textureIds;							// pointer to texture Array
 	MATERIAL_TEXTUREID* m_textureOfEachMaterial;
+	Assimp::Importer* m_myImporter;
 
 	float m_fSize;
 	glm::vec3 m_vCenter;
 };
-

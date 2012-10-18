@@ -18,7 +18,7 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/external")
 ################################
 # Add Assimp 
 
-set(ASSIMP_DIRECTORY assimp-2.0.863-sdk)
+set(ASSIMP_DIRECTORY assimp-3.0.1270-sdk)
 
 if(MSVC AND NOT CMAKE_CL_64)
 	set(ASSIMP_LIBRARY_DIRECTORY "assimp_release-dll_win32")
@@ -64,14 +64,19 @@ endif(MSVC AND CMAKE_CL_64)
 set(FREEGLUT_LIBRARY freeglut_static)
 
 add_definitions(-DFREEGLUT_STATIC)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/freeglut-2.6.0)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/freeglut-2.6.0/lib/${FREEGLUT_BINARY_DIRECTORY})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/freeglut-2.8.0)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/freeglut-2.8.0/lib/${FREEGLUT_BINARY_DIRECTORY})
 
 if(WIN32)
 	set(FREEGLUT_LIBRARY freeglut_static)
 elseif(UNIX)
 	set(FREEGLUT_LIBRARY freeglut)
 endif(WIN32)
+
+################################
+# Add GLF 
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/glf)
 
 ################################
 # Add GLM 
@@ -95,8 +100,8 @@ if(MSVC AND CMAKE_CL_64)
 endif(MSVC AND CMAKE_CL_64)
 
 add_definitions(-DGLEW_STATIC)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/glew-1.7.0/include)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/glew-1.7.0/lib/${GLEW_BINARY_DIRECTORY})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/glew-1.9.0/include)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/glew-1.9.0/lib/${GLEW_BINARY_DIRECTORY})
 
 if(WIN32)
 	set(GLEW_LIBRARY glew32s)
@@ -157,6 +162,22 @@ if(MSVC)
 endif(MSVC)
 
 ################################
+# Add custom target to copy all data
+
+set(TARGET_DATA_COPY DATA_COPY)
+if(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
+	add_custom_target(
+		${TARGET_DATA_COPY}
+ 		COMMAND ${CMAKE_COMMAND} -E echo "In source build")
+else(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
+	add_custom_target(
+		${TARGET_DATA_COPY}
+ 		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/data ${CMAKE_CURRENT_BINARY_DIR}/data)
+endif(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
+
+set(OGL_DATA_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/data)
+
+################################
 # function to create a project for the sample in the solution
 
 function(createSample NAME)
@@ -177,6 +198,7 @@ function(createSample NAME)
 	add_custom_command(
 		TARGET ${NAME} POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy ${ASSIMP_BINARY} ${CMAKE_CURRENT_BINARY_DIR})
+	add_dependencies(${NAME} ${TARGET_DATA_COPY})
 
 	target_link_libraries(${NAME} ${GL_LIBRARY} ${CL_LIBRARY} ${GLEW_LIBRARY} ${FREEGLUT_LIBRARY} ${ASSIMP_LIBRARY})
 endfunction(createSample)
@@ -199,6 +221,7 @@ function(createSampleWGL NAME)
 	add_custom_command(
 		TARGET ${NAME} POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy ${ASSIMP_BINARY} ${CMAKE_CURRENT_BINARY_DIR})
+	add_dependencies(${NAME} ${TARGET_DATA_COPY})
 
 	target_link_libraries(${NAME} ${GL_LIBRARY} ${CL_LIBRARY} ${GLEW_LIBRARY} ${FREEGLUT_LIBRARY} ${ASSIMP_LIBRARY})
 endfunction(createSampleWGL)

@@ -63,7 +63,7 @@ namespace amd
 
 	inline void init()
 	{
-#if (defined(WIN32))
+#if (defined(_WIN32))
 		glewInit();
 		glGetError();
 		
@@ -244,7 +244,11 @@ namespace amd
 		return Result == GL_TRUE;
 	}
 
-	inline bool checkShader(GLuint ShaderName, const char* Source)
+	inline bool checkShader
+	(
+		GLuint ShaderName, 
+		std::string const & Source
+	)
 	{
 		if(!ShaderName)
 			return false;
@@ -265,9 +269,28 @@ namespace amd
 		return Result == GL_TRUE;
 	}
 
+	inline std::string parseArguments(std::string const & Arguments)
+	{
+		std::string Result;
+
+
+
+		return Result;
+	}
+
 	inline GLuint createShader
 	(
 		GLenum Type,
+		std::string const & Source
+	)
+	{
+		return createShader(Type, "", Source);
+	}
+
+	inline GLuint createShader
+	(
+		GLenum Type,
+		std::string const & Arguments,
 		std::string const & Source
 	)
 	{
@@ -277,11 +300,12 @@ namespace amd
 		if(!Source.empty())
 		{
 			std::string SourceContent = amd::loadFile(Source);
-			char const * SourcePointer = SourceContent.c_str();
+			char const * SourceArray[2];
+			SourceArray[0] = parseArguments(Arguments).c_str();
+			SourceArray[1] = SourceContent.c_str();
 			Name = glCreateShader(Type);
-			glShaderSource(Name, 1, &SourcePointer, NULL);
+			glShaderSource(Name, 2, SourceArray, NULL);
 			glCompileShader(Name);
-			Validated = amd::checkShader(Name, SourcePointer);
 		}
 
 		return Name;
@@ -435,7 +459,7 @@ namespace amd
 
 	static void idle()
 	{
-#if defined(WIN32)
+#if defined(_WIN32)
 		glutPostRedisplay();
 #endif
 	}

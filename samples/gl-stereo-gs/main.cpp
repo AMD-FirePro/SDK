@@ -3,7 +3,7 @@
 #include <cstring>
 #include <cmath>
 
-#include "model_loader.hpp"
+#include "ModelAndTextureLoader.hpp"
 
 #define NUM_LIGHT_MAX 8
 #define EYE_SEPARATION 0.02f
@@ -96,6 +96,8 @@ namespace
 		glm::vec4 specular;
 		glm::vec3 attenuation;
 	};
+
+	ModelAndTextureLoader* fullModel;
 }//namespace
 
 bool initDebugOutput()
@@ -238,43 +240,13 @@ bool initBuffers()
 	return true;
 }
 
-bool initVertexArray(pSceneGeometry* SceneModel)
+bool initModels()
 {
-	if(!SceneModel)
-		return false;
+	bool Validated(true);
 
-	//I know my model only have one mesh, which is built into one VBO ...
-	glGenVertexArrays(1, &VertexArrayName);
-	glBindVertexArray(VertexArrayName);
+	fullModel = new ModelAndTextureLoader((amd::SHARED_DATA_DIRECTORY+"dragon2_LQ\\").c_str(),(amd::SHARED_DATA_DIRECTORY +  "dragon2_LQ\\dragon2.obj"  ).c_str()); 
 
-	glBindBuffer(GL_ARRAY_BUFFER, SceneModel->children[0]->VBOID);
-	glVertexAttribPointer(MySemantic::attr::POSITION, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, SceneModel->children[0]->VBOIDNormal);
-	glVertexAttribPointer(MySemantic::attr::NORMAL, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	glEnableVertexAttribArray(MySemantic::attr::POSITION);
-	glEnableVertexAttribArray(MySemantic::attr::NORMAL);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, SceneModel->children[0]->IBOID); 
-
-	glBindVertexArray(0);
-
-	glGenVertexArrays(1, &VertexArrayDrawQuadName);
-	glBindVertexArray(VertexArrayDrawQuadName);
-
-	glBindBuffer(GL_ARRAY_BUFFER, BufferName[buffer::POSITION]);
-	glVertexAttribPointer(MySemantic::attr::POSITION, 4, GL_FLOAT, GL_FALSE, 6*sizeof(float), 0);
-	glEnableVertexAttribArray(MySemantic::attr::POSITION);
-
-	glVertexAttribPointer(MySemantic::attr::TEXCOORD, 2, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)(NULL+4*sizeof(float)));
-	glEnableVertexAttribArray(MySemantic::attr::TEXCOORD);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, BufferName[buffer::ELEMENT]);
-
-	glBindVertexArray(0);
-
-	return true;
+	return Validated;
 }
 
 bool begin()
@@ -286,23 +258,13 @@ bool begin()
 	if(Success && amd::checkExtension("GL_ARB_debug_output"))
 		Success = initDebugOutput();
 	if(Success)
-	    Success = initProgram();
+		Success = initBuffers();
+	if(Success)
+		Success = initModels();
+	if(Success)
+		Success = initProgram();
 	if(Success)
 		Success = initFBOandTextures();
-
-	loadasset((amd::DATA_DIRECTORY + "duck.dae").c_str());
-	recursive_meshGenerator(scene, scene->mRootNode, pCurrentScene);
-
-	Success = initBuffers();
-	Success = initVertexArray(pCurrentScene);
-
-	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
-	glClearDepth(1.0);
-
-	glBindBufferBase(GL_UNIFORM_BUFFER, MySemantic::uniform::TRANSFORM, BufferName[buffer::TRANSFORM]);
-	glBindBufferBase(GL_UNIFORM_BUFFER, MySemantic::uniform::LIGHT, BufferName[buffer::LIGHT]);
-
-	glEnable(GL_DEPTH_TEST);
 
 	return Success && amd::checkError("Init");
 }
@@ -317,21 +279,18 @@ bool end()
 
 void SetUpMatrices()
 {
-	float tmp = scene_max.x-scene_min.x;
-	tmp = aisgl_max(scene_max.y - scene_min.y,tmp);
-	tmp = aisgl_max(scene_max.z - scene_min.z,tmp);
+	float tmp = fullModel->GetSize();
 	tmp = 5.0f / tmp;
 
 	glm::mat4 MV_P_System[4];
 
 	glBindBuffer(GL_UNIFORM_BUFFER, BufferName[buffer::TRANSFORM]);
-	glm::mat4* Pointer = (glm::mat4*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, 4*sizeof(glm::mat4), 
-	GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+	glm::mat4* Pointer = (glm::mat4*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, 4*sizeof(glm::mat4), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
 
 	// scale the whole asset to fit into our view frustum 
-	glm::mat4 Scale =  glm::scale(glm::mat4(1.0f), glm::vec3(tmp, tmp, tmp));  
-	glm::mat4 Model =  glm::translate(Scale, glm::vec3(-scene_center.x, -scene_center.y, -scene_center.z ));
-
+	glm::mat4 Scale =  glm::scale(glm::mat4(1.0f), glm::vec3(tmp));  
+	glm::mat4 Model =  glm::translate(Scale, -fullModel->GetCenter());
+	
 	//zoom
 	glm::mat4 ViewTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -Window.TranlationCurrent.y));
 
@@ -375,10 +334,46 @@ void SetUpMatrices()
 	glUnmapBuffer(GL_UNIFORM_BUFFER);
 }
 
+void recursiveMeshRendering(const struct aiScene *sc, const struct aiNode* nd, unsigned int* currentMesh)
+{
+	// draw all meshes assigned to this node
+	for (unsigned int n = 0; n < nd->mNumMeshes; ++n)
+	{
+		const struct aiMesh* mesh = sc->mMeshes[nd->mMeshes[n]];
+
+		//apply material
+		const struct aiMaterial* material = sc->mMaterials[mesh->mMaterialIndex];
+
+		ModelAndTextureLoader::MATERIAL_TEXTUREID textureIDs = fullModel->GetGLtextureOfMaterial(mesh->mMaterialIndex);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textureIDs.idDiffuse);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, textureIDs.idNormal);		
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, textureIDs.idSpecular);		
+
+	//render mesh
+		glBindVertexArray(fullModel->GetMeshVertexArray(*currentMesh));
+		glDrawElements(GL_TRIANGLES, fullModel->GetNb3PointsFace(*currentMesh)*3, GL_UNSIGNED_INT, NULL);
+		(*currentMesh) ++;
+	}
+
+	// draw all children
+	for (unsigned int n = 0; n < nd->mNumChildren; ++n)
+	{
+		recursiveMeshRendering(sc, nd->mChildren[n],currentMesh);
+	}
+}
+
 void display()
 {
 	//clear back buffer
+	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
+	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glEnable(GL_DEPTH_TEST);
 
 	glBindVertexArray(VertexArrayName);
 
@@ -388,17 +383,24 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	SwicthProgram(ProgramGenName);
 	SetUpMatrices();
-	glDrawElements(GL_TRIANGLES, pCurrentScene->children[0]->NbFaces*3, GL_UNSIGNED_SHORT, NULL);
+
+	unsigned int iMesh = 0;
+	recursiveMeshRendering(fullModel->GetAssimpScene(),fullModel->GetAssimpScene()->mRootNode,&iMesh);
+	//glDrawElements(GL_TRIANGLES, pCurrentScene->children[0]->NbFaces*3, GL_UNSIGNED_SHORT, NULL);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
   
 	SwicthProgram(ProgramResName);
+
 	GLenum buffers[] = {GL_BACK_LEFT,GL_BACK_RIGHT};
 	glDrawBuffers(2, buffers);
+
 	glBindVertexArray(VertexArrayDrawQuadName);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, stereoColorTexARRAY);  
+	glBindBufferBase(GL_UNIFORM_BUFFER, MySemantic::uniform::TRANSFORM, BufferName[buffer::TRANSFORM]);
+	glBindBufferBase(GL_UNIFORM_BUFFER, MySemantic::uniform::LIGHT, BufferName[buffer::LIGHT]);
+
 	glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_SHORT, NULL);
-	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 
 	// Swap framebuffers
 	amd::swapBuffers();
@@ -410,7 +412,7 @@ int main(int argc, char* argv[])
 	return amd::run(
 		argc, argv,
 		glm::ivec2(::gWidth, ::gHeight), 8, 
-		WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB, ::SAMPLE_MAJOR_VERSION, 
+		WGL_CONTEXT_CORE_PROFILE_BIT_ARB, ::SAMPLE_MAJOR_VERSION, 
 		::SAMPLE_MINOR_VERSION);
 }
 

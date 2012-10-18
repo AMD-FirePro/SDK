@@ -6,7 +6,7 @@
 // indirect buffer.
 //**********************************
 
-#include <amd/amd.hpp>
+#include <glf/glf.hpp>
 
 #define GL_TEXTURE_STORAGE_SPARSE_BIT_AMD 0x00000001
 
@@ -97,21 +97,27 @@ bool initProgram()
 
 	if(Validated)
 	{
-		GLuint VertShaderName = amd::createShader(GL_VERTEX_SHADER, VERT_SHADER_SOURCE);
-		GLuint FragShaderName = amd::createShader(GL_FRAGMENT_SHADER, FRAG_SHADER_SOURCE);
+		amd::compiler Compiler;
+		GLuint VertShaderName = Compiler.create(GL_VERTEX_SHADER, 
+			"--version 420 --profile core", VERT_SHADER_SOURCE);
+		GLuint FragShaderName = Compiler.create(GL_FRAGMENT_SHADER, 
+			"--version 420 --profile core", FRAG_SHADER_SOURCE);
+
+		Validated = Validated && Compiler.check();
 
 		ProgramName[program::VERTEX] = glCreateProgram();
 		glProgramParameteri(ProgramName[program::VERTEX], GL_PROGRAM_SEPARABLE, GL_TRUE);
 		glAttachShader(ProgramName[program::VERTEX], VertShaderName);
 		glLinkProgram(ProgramName[program::VERTEX]);
 		glDeleteShader(VertShaderName);
-		Validated = Validated && amd::checkProgram(ProgramName[program::VERTEX]);
 
 		ProgramName[program::FRAGMENT] = glCreateProgram();
 		glProgramParameteri(ProgramName[program::FRAGMENT], GL_PROGRAM_SEPARABLE, GL_TRUE);
 		glAttachShader(ProgramName[program::FRAGMENT], FragShaderName);
 		glLinkProgram(ProgramName[program::FRAGMENT]);
 		glDeleteShader(FragShaderName);
+
+		Validated = Validated && amd::checkProgram(ProgramName[program::VERTEX]);
 		Validated = Validated && amd::checkProgram(ProgramName[program::FRAGMENT]);
 	}
 
@@ -218,8 +224,8 @@ bool initVertexArray()
 	glGenVertexArrays(1, &VertexArrayName);
     glBindVertexArray(VertexArrayName);
 		glBindBuffer(GL_ARRAY_BUFFER, BufferName[buffer::VERTEX]);
-		glVertexAttribPointer(amd::semantic::attr::POSITION, 2, GL_FLOAT, GL_FALSE, sizeof(amd::vertex_v2fv2f), AMD_BUFFER_OFFSET(0));
-		glVertexAttribPointer(amd::semantic::attr::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(amd::vertex_v2fv2f), AMD_BUFFER_OFFSET(sizeof(glm::vec2)));
+		glVertexAttribPointer(amd::semantic::attr::POSITION, 2, GL_FLOAT, GL_FALSE, sizeof(amd::vertex_v2fv2f), GLF_BUFFER_OFFSET(0));
+		glVertexAttribPointer(amd::semantic::attr::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(amd::vertex_v2fv2f), GLF_BUFFER_OFFSET(sizeof(glm::vec2)));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glEnableVertexAttribArray(amd::semantic::attr::POSITION);
