@@ -244,7 +244,7 @@ bool initModels()
 {
 	bool Validated(true);
 
-	fullModel = new ModelAndTextureLoader((amd::SHARED_DATA_DIRECTORY+"dragon2_LQ\\").c_str(),(amd::SHARED_DATA_DIRECTORY +  "dragon2_LQ\\dragon2.obj"  ).c_str()); 
+	fullModel = new ModelAndTextureLoader((amd::SHARED_DATA_DIRECTORY+"dragon2/").c_str(),(amd::SHARED_DATA_DIRECTORY +  "dragon2/dragon2.obj"  ).c_str()); 
 
 	return Validated;
 }

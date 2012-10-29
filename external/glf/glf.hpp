@@ -141,7 +141,6 @@ namespace glf
 	{
 		return !(A == B);
 	}
-
 }//namespace glf
 
 namespace 

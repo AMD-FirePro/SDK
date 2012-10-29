@@ -28,7 +28,8 @@
 
 namespace glf
 {
-		static std::string const DATA_DIRECTORY("./data/");
+	static std::string const DATA_DIRECTORY("./data/");
+	static std::string const SHARED_DATA_DIRECTORY("../../data/");
 }//namespace glf
 
 #endif//GLF_COMMON_INCLUDED

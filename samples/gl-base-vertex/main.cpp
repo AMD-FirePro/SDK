@@ -152,7 +152,7 @@ bool initModels()
 {
 	bool Validated(true);
 
-	fullModel = new ModelAndTextureLoader_V2((amd::DATA_DIRECTORY+"dragon2\\").c_str(),(amd::DATA_DIRECTORY +  "dragon2\\dragon2.obj"  ).c_str()); 
+	fullModel = new ModelAndTextureLoader_V2((amd::SHARED_DATA_DIRECTORY + "dragon2/").c_str(),(amd::SHARED_DATA_DIRECTORY + "dragon2/dragon2.obj").c_str()); 
 
 	CurrentMat.ambiant=glm::vec4(-1.0);
 	CurrentMat.diffuse=glm::vec4(-1.0);
@@ -215,11 +215,11 @@ bool begin()
 	if(Validated && amd::checkExtension("GL_ARB_debug_output"))
 		Validated = initDebugOutput();
 	if(Validated)
-		Validated = initProgram();
-	if(Validated)
 		Validated = initBuffer();
 	if(Validated)
 		Validated = initModels();
+	if(Validated)
+		Validated = initProgram();
 
 	return Validated;
 }
