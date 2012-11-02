@@ -10,9 +10,8 @@ layout(location = 1, index = 0) out vec4 ColorL;
 
 void main()
 {
-    ColorL = texture2DArray(arrayTex, vLeftCoords.xyz);
-    
-    // right eye view
-   ColorR = texture2DArray(arrayTex, vRightCoords.xyz);
- 
+	ColorL = texture2DArray(arrayTex, vLeftCoords.xyz);
+
+	// right eye view
+	ColorR = texture2DArray(arrayTex, vRightCoords.xyz);
 }
