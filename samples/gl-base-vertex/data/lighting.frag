@@ -1,10 +1,10 @@
+#version 420 core
 
 #define IN_FRAG_COLOR 0
 
 #define UNIFORM_UPDATE_EACH_FRAME  0
 #define UNIFORM_UPDATE_RESIZE      1
 #define UNIFORM_MATERIAL           2
-
 
 //These structs must be the same that in the cpp file
 //comments of each uniform are in the cpp file
@@ -26,10 +26,6 @@ layout(shared,  binding = UNIFORM_MATERIAL) uniform U_MATERIAL
 	vec4 ambiant;
 } u_Material;
 
-
-
-
-
 layout(binding = 0) uniform sampler2D texture_Diffuse;
 layout(binding = 1) uniform sampler2D texture_Normal;
 layout(binding = 2) uniform sampler2D texture_Specular;
@@ -43,7 +39,6 @@ in block
 } In;
 
 layout(location = IN_FRAG_COLOR, index = 0) out vec4 Color;
-
 
 /////////////////
 //
@@ -63,33 +58,24 @@ vec3 ComputeIllumination(vec3 vNormalTS, vec3 materialDiffuse, vec3 vLightTS, ve
 	float normalDotHalf = max(dot(vNormalTS,halfVector),0.0f);
 
 	//attenuate the low values
-	//vec3 specular = clamp( pow( normalDotHalf, materialSpecular.w * 255.0f ),0.0f,1.0f) * materialSpecular.xyz;
-	vec3 specular = clamp( pow( normalDotHalf, 80.0f ),0.0f,1.0f);
+	//float specular = clamp( pow( normalDotHalf, materialSpecular.w * 255.0f ),0.0f,1.0f) * materialSpecular.xyz;
+	float specular = clamp( pow( normalDotHalf, 80.0f ),0.0f,1.0f);
 
 	vec3 diffuse = clamp( dot( vNormalTS, vLightTS ),0.0f,1.0f) * u_UpdateEachFrame.lightDiffuseColor.xyz;
-
-	vec3 finalColor = ( u_UpdateEachFrame.lightAmbientColor.xyz + diffuse.xyz ) * materialDiffuse + u_Material.ambiant.xyz + specular.xyz ; 
-
-
-
+	vec3 finalColor = ( u_UpdateEachFrame.lightAmbientColor.xyz + diffuse.xyz ) * materialDiffuse + u_Material.ambiant.xyz + specular; 
 
 	//finalColor = clamp( pow( normalDotHalf, 80.0f ),0.0f,1.0f);
 	//finalColor = u_Material.ambiant.xyz;
 
-
 	return finalColor;
 }
 
-
-
 void main()
 {
-
 	vec3 normalTS = vec3(0.0f,0.0f,1.0f);
 	#ifdef PRESENCE_NORMALTEXTURE
 		normalTS = normalize(texture2D(texture_Normal, In.Texcoord.st).xyz);
 	#endif
-	
 
 	vec4 materialTextureDiffuse = vec4(1.0f,1.0f,1.0f,1.0f);
 	materialTextureDiffuse = u_Material.diffuse.xyzw;
@@ -98,8 +84,6 @@ void main()
 			materialTextureDiffuse = texture2D(texture_Diffuse, In.Texcoord.st).xyzw;
 		#endif
 	#endif
-
-
 
 	vec4 materialTextureSpecular = vec4(1.0f,1.0f,1.0f,0.8f);
 	#ifdef PRESENCE_SPECULARTEXTURE
@@ -112,16 +96,11 @@ void main()
 		Color = vec4(ComputeIllumination( normalTS, materialTextureDiffuse.xyz,  vLightTS,  vViewTS, materialTextureSpecular.xyzw  ),1.0f);
 		
 		//Color = vec4(1.0f,0.0f,0.0f,1.0f);
-
 	#else
-
 		Color.w = 1.0f;
 		Color.xyz = materialTextureDiffuse.xyz  *  max(0.0f,dot(-u_UpdateEachFrame.lightDirectionNormalizedWS.xyz,normalize(In.vNormalWS.xyz)));
 		Color.xyz += u_Material.ambiant.xyz;
 	#endif
 
-
-
 	//Color = vec4(In.vNormalWS.xyz,1.0f);
-
 }

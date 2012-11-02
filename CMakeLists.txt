@@ -86,8 +86,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/glm-0.9.3.3)
 ################################
 # Add GLI 
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/gli-0.4-dev)
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/gli-0.3.1.0)
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/gli-0.4-dev)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/gli-0.3.1.0)
 
 ################################
 # Add GLEW

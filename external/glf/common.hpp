@@ -14,6 +14,7 @@
 // GLI
 #include <gli/gli.hpp>
 #include <gli/gtx/loader.hpp>
+#include <gli/gtx/gl_texture2d.hpp>
 
 // STL
 #include <vector>

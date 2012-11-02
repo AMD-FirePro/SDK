@@ -58,7 +58,7 @@ namespace
 	GLsizeiptr const FaceIndicesSize = FaceIndicesCount * sizeof(glm::uint32);
 	glm::uint32 FaceIndices[FaceIndicesCount] = 
 	{
-      0, 1, 2, 3,  
+	  0, 1, 2, 3,  
 	  5, 4, 1, 0,  
 	  6, 3, 2, 7,  
 	  6, 7, 4, 5,  
@@ -131,12 +131,14 @@ bool initProgram()
 		glLinkProgram(ProgramName);
 		Validated = amd::checkProgram(ProgramName);
 	}
+
 	if(Validated)
 	{
-	    UniformMVP = glGetUniformLocation(ProgramName, "matMVP");
+		UniformMVP = glGetUniformLocation(ProgramName, "matMVP");
 		UniformView = glGetUniformLocation(ProgramName, "matView");
 		UniformWeights = glGetUniformLocation(ProgramName, "weights");
 	}
+
 	if(Validated)
 	{
 		ProgramName2 = glCreateProgram();
@@ -149,14 +151,15 @@ bool initProgram()
 		glLinkProgram(ProgramName2);
 		Validated = amd::checkProgram(ProgramName2);
 	}
+
 	if(Validated)
 	{
-	    UniformMVP2 = glGetUniformLocation(ProgramName2, "matMVP");
+		UniformMVP2 = glGetUniformLocation(ProgramName2, "matMVP");
 	}
 
 	for (int i=0; i<16; i++)
 	{
-	    LineIndices[8*i] = FaceIndices[4*i]; LineIndices[8*i+1] = FaceIndices[4*i+1];
+		LineIndices[8*i] = FaceIndices[4*i]; LineIndices[8*i+1] = FaceIndices[4*i+1];
 		LineIndices[8*i+2] = FaceIndices[4*i+1]; LineIndices[8*i+3] = FaceIndices[4*i+2];
 		LineIndices[8*i+4] = FaceIndices[4*i+2]; LineIndices[8*i+5] = FaceIndices[4*i+3];
 		LineIndices[8*i+6] = FaceIndices[4*i+3]; LineIndices[8*i+7] = FaceIndices[4*i];
@@ -183,18 +186,18 @@ bool initVertexArray()
 bool initBuffer()
 {
 	glGenBuffers(1, &ArrayBufferName);
-    glBindBuffer(GL_ARRAY_BUFFER, ArrayBufferName);
-    glBufferData(GL_ARRAY_BUFFER, VertexSize, VertexData, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, ArrayBufferName);
+	glBufferData(GL_ARRAY_BUFFER, VertexSize, VertexData, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glGenBuffers(1, &PatchIndicesBufferName);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, PatchIndicesBufferName);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, PatchIndicesSize, PatchIndices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, PatchIndicesBufferName);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, PatchIndicesSize, PatchIndices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glGenBuffers(1, &FaceIndicesBufferName);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, FaceIndicesBufferName);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, FaceIndicesSize*2, LineIndices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, FaceIndicesBufferName);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, FaceIndicesSize*2, LineIndices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	return amd::checkError("initBuffer");

@@ -241,7 +241,7 @@ namespace glf
 			GLint Result = GL_FALSE;
 			glGetShaderiv(ShaderName, GL_COMPILE_STATUS, &Result);
 
-			if(Result == GL_TRUE)
+			if(Result == GL_FALSE)
 			{
 				int InfoLogLength;
 				glGetShaderiv(ShaderName, GL_INFO_LOG_LENGTH, &InfoLogLength);

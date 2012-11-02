@@ -206,7 +206,7 @@ bool initVertexArray()
 	bool Validated(true);
 
 	glGenVertexArrays(1, &VertexArrayModel);
-    glBindVertexArray(VertexArrayModel);
+	glBindVertexArray(VertexArrayModel);
 		glBindBuffer(GL_ARRAY_BUFFER, BufferName[buffer::VERTEX]);
 		glVertexAttribPointer(MySemantic::attr::IN_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(VERTEX_ELEMENT), AMD_BUFFER_OFFSET(0));
 		glVertexAttribPointer(MySemantic::attr::IN_TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(VERTEX_ELEMENT), AMD_BUFFER_OFFSET(sizeof(glm::vec3)));
@@ -275,19 +275,8 @@ void display()
 			GL_UNIFORM_BUFFER, 0, sizeof(UPDATE_EACH_FRAME),
 			GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
 
-		float yScale = 1.0f / tanf(    (3.14f / 4.0f)   /2.0f);
-		float xScale = yScale / (Window.Size.x / Window.Size.y);
-		float zNear = 1.0f;
-		float zFar = 500.0f;
+		glm::mat4 Projection = glm::perspective(45.f, float(Window.Size.x) / float(Window.Size.y), 1.0f, 500.f);
 
-		//glm::mat4 Projection = glm::perspectiveFov(45.f, (float)Window.Size.x, (float)Window.Size.y, zNear, zFar);
-
-		glm::mat4 Projection;
-		Projection[0] = glm::vec4(xScale,      0.0f,       0.0f,                     0.0f);
-		Projection[1] = glm::vec4(0.0f,        yScale,     0.0f,                     0.0f);
-		Projection[2] = glm::vec4(0.0f,        0.0f,       zFar/(zNear-zFar),        -1.0f);
-		Projection[3] = glm::vec4(0.0f,        0.0f,       -zNear*zFar/(zFar-zNear), 0.0f);
-		
 		glm::mat4 ViewTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -Window.TranlationCurrent.y));
 		glm::mat4 ViewRotateX = glm::rotate(ViewTranslate, Window.RotationCurrent.y, glm::vec3(1.f, 0.f, 0.f));
 		glm::mat4 View = glm::rotate(ViewRotateX, Window.RotationCurrent.x, glm::vec3(0.f, 1.f, 0.f));

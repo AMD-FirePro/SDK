@@ -137,11 +137,10 @@ namespace detail
 	}
 
 }//namespace detail
-
+/*
 	inline GLuint createTexture2D(std::string const & Filename)
 	{
 		gli::texture2D Texture = gli::load(Filename);
-
 		assert(!Texture.empty());
 
 		detail::texture_desc TextureDesc = detail::gli2ogl_cast(Texture.format());
@@ -198,7 +197,7 @@ namespace detail
 
 		return Name;
 	}
-
+*/
 }//namespace gli
 
 

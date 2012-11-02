@@ -1,24 +1,25 @@
 #version 420 core
 
 layout(vertices = 16) out;
+
 uniform vec4 center=vec4(0,0,0,1);
 uniform mat4 matView;
 uniform float weights[256];
 
 in block
 {
-    vec3 Position0;
+	vec3 Position0;
 } In[];
 
 out block
 {
-    vec3 Position0;
+	vec3 Position0;
 } Out[];
 
 void main()
-{	
-    float edgeTF = clamp(100.0f/length(matView*center - center), 2, 16);
-    gl_TessLevelOuter[0] = edgeTF;
+{
+	float edgeTF = clamp(100.0f/length(matView*center - center), 2, 16);
+	gl_TessLevelOuter[0] = edgeTF;
 	gl_TessLevelOuter[1] = edgeTF;
 	gl_TessLevelOuter[2] = edgeTF;
 	gl_TessLevelOuter[3] = edgeTF;
@@ -26,10 +27,7 @@ void main()
 
 	Out[gl_InvocationID].Position0 = vec3(0,0,0);
 	for (int j = 0; j < 16; j++)
-    {
-        Out[gl_InvocationID].Position0 += In[j].Position0 * weights[16*j+gl_InvocationID];
-    } 
-    
-
+	{
+		Out[gl_InvocationID].Position0 += In[j].Position0 * weights[16*j+gl_InvocationID];
+	}
 }
-
