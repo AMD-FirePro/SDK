@@ -1,4 +1,7 @@
 #version 420 core
+#extension GL_EXT_gpu_shader4 : enable
+#extension GL_EXT_shader_image_load_store : enable
+
 precision highp float;
 
 layout(r32ui) uniform uimage2D startOffsetBuffer;
@@ -127,32 +130,33 @@ void calculateLighting(in int nLights, in vec3 N, in vec3 V, in float shininess,
 // apply a Percentage Close Filtering 4x4 for smoothing shadow edges
 float GetShadowColor(sampler2DShadow shadowMap, vec3 shadowUV, float mapScale)
 {
-	float shadowColor = shadow2D(shadowMap, shadowUV + vec3( -1.5, -1.5, 0)*mapScale).r;
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( -1.5, -0.5, 0)*mapScale).r;
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( -1.5,  0.5, 0)*mapScale).r;
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( -1.5,  1.5, 0)*mapScale).r;
+	float shadowColor = texture(shadowMap, shadowUV + vec3( -1.5, -1.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( -1.5, -0.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( -1.5,  0.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( -1.5,  1.5, 0)*mapScale).r;
 
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( -0.5, -1.5, 0)*mapScale).r;
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( -0.5, -0.5, 0)*mapScale).r;
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( -0.5,  0.5, 0)*mapScale).r;
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( -0.5,  1.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( -0.5, -1.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( -0.5, -0.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( -0.5,  0.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( -0.5,  1.5, 0)*mapScale).r;
 
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( 0.5, -1.5, 0)*mapScale).r;
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( 0.5, -0.5, 0)*mapScale).r;
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( 0.5,  0.5, 0)*mapScale).r;
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( 0.5,  1.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( 0.5, -1.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( 0.5, -0.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( 0.5,  0.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( 0.5,  1.5, 0)*mapScale).r;
 
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( 1.5, -1.5, 0)*mapScale).r;
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( 1.5, -0.5, 0)*mapScale).r;
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( 1.5,  0.5, 0)*mapScale).r;
-	shadowColor += shadow2D(shadowMap, shadowUV + vec3( 1.5,  1.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( 1.5, -1.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( 1.5, -0.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( 1.5,  0.5, 0)*mapScale).r;
+	shadowColor += texture(shadowMap, shadowUV + vec3( 1.5,  1.5, 0)*mapScale).r;
 	return shadowColor/16.0;
 }
 
 ////////////////////////////////////////////////////////////////////////
 void AppendABuffer(vec4 color)
 {
-        uvec4 storeValue;
+        color = clamp(color, 0, 1);
+
         ivec2 offset = ivec2(gl_FragCoord.xy);
 
         // Retrieve current pixel count and increase counter	
@@ -162,11 +166,8 @@ void AppendABuffer(vec4 color)
         uint uOldStartOffset = imageAtomicExchange(startOffsetBuffer, offset, uPixelCount);
         	
         int uStartAddr = int(uPixelCount);
-        uvec4 uc = uvec4(floor(color*255+0.5));
-        
-        storeValue.x = uint((uc.r + (uc.g << 8) + (uc.b << 16) + (uc.a << 24)));    
-        storeValue.y = uint(floor((gl_FragCoord.z + 1) *0x7fffffff+0.5));	
-        storeValue.z = uOldStartOffset;
+
+		uvec4 storeValue = uvec4(packUnorm4x8(color), floatBitsToUint(gl_FragCoord.z), uOldStartOffset, 0);
 
         imageStore(linkedListBuffer, uStartAddr, storeValue);
 }      	
@@ -240,7 +241,7 @@ void main()
 //		vec3 eyeWorldPosition = vec3(0.0,0.0,1.0);	// to be sent as uniform by app for better refl on flat surface
 		vec3 viewVec = normalize(v_EyeDirection.xyz - vec3(0.0,0.0,1.0));
 		vec3 reflectedVector = reflect(viewVec, normal);
-		vec4 envColor = textureCube(envMapCube, reflectedVector);
+		vec4 envColor = texture(envMapCube, reflectedVector);
 
 		// fresnel + refraction
 		if (finalAlpha < 1.0)

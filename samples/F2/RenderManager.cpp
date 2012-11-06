@@ -845,10 +845,8 @@ void RenderManager::CreateAppendBuffers(int iWidth, int iHeight)
 	glGenBuffers(1,&m_atomicCounter);
 	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER_EXT, m_atomicCounter);
 	glBufferData(GL_ATOMIC_COUNTER_BUFFER_EXT, 32, NULL, GL_DYNAMIC_DRAW);
-
-	//glBindBufferBaseEXT2(GL_ATOMIC_COUNTER_BUFFER_EXT, 0, m_atomicCounter);
-
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER_EXT, 0, m_atomicCounter);
+//    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
 	glBindImageTextureEXT(0,  m_globalbuffer[0], 0, GL_TRUE, 0, GL_READ_WRITE, GL_R32UI);
 	glBindImageTextureEXT(1,  m_globalbuffer[1], 0, GL_TRUE, 0, GL_READ_WRITE, GL_RGBA32UI);
@@ -866,13 +864,12 @@ void RenderManager::ResizeAppendBuffers(int iWidth, int iHeight)
 	int listBufSize = iWidth * iHeight * MAX_SORTED_FRAGMENT * sizeof(LinkedListBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_linkedListBuffer);
     glBufferData(GL_ARRAY_BUFFER, listBufSize, NULL, GL_DYNAMIC_DRAW);
-    glVertexPointer(3, GL_FLOAT, 0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0 );
 
     glBindTexture(GL_TEXTURE_BUFFER_ARB, m_globalbuffer[1]);    
     glTexBuffer(GL_TEXTURE_BUFFER_ARB, GL_RGBA32UI, m_linkedListBuffer);      
 
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+//    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	CheckOglError();
 }
 
@@ -913,7 +910,6 @@ void RenderManager::ClearAppendBuffers()
 
 	glMemoryBarrierEXT(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT_EXT);
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-    //glBindBufferBaseEXT2(GL_ATOMIC_COUNTER_BUFFER_EXT, 0, m_atomicCounter);
 	glBufferSubData(GL_ATOMIC_COUNTER_BUFFER_EXT, 0, sizeof(GLuint), &ZeroMem);
 
 	CheckOglError();

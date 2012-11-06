@@ -40,9 +40,8 @@ void main()
     //blending
     for (i = 0; i < nNumFragments; i++)
     {
-        vec4 src;        
-        src = vec4(SortedFragments[i].r&0xff, (SortedFragments[i].r>>8)&0xff, (SortedFragments[i].r>>16)&0xff, (SortedFragments[i].r>>24)&0xff)/255.f;
-        color.rgb = src.a * src.rgb + (1.0-src.a) * color.rgb;
+        vec4 src = unpackUnorm4x8(SortedFragments[i].x);
+		color.rgb = src.a * src.rgb + (1.0-src.a) * color.rgb;
 		color.a = src.a + (1-src.a)*color.a;
     }            
 
