@@ -4,8 +4,8 @@
 precision highp float;
 #define MAX_SORTED_FRAGMENTS 20
 out vec4 color0;
-layout(r32ui) uniform uimage2D startOffsetBuffer;
-layout(rgba32ui) uniform uimageBuffer linkedListBuffer;
+layout(r32ui, binding = 0) uniform coherent uimage2D startOffsetBuffer;
+layout(rgba32ui, binding = 1) uniform coherent uimageBuffer linkedListBuffer;
 
 void main()
 {

@@ -60,9 +60,6 @@ enum Semantic
 	reflectionBumpiness,
 	level,
 
-	startOffsetBuffer,
-	linkedListBuffer,
-
 	matModelView,
 	matModelViewProj,
 	matNormal,

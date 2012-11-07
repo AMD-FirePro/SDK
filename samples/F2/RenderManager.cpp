@@ -4,6 +4,8 @@
 #include "GLSLBinding.hpp"
 #include "GLSLShader.hpp"
 
+//#define USE_ATOMIC_COUNTER
+
 //////////////////////////////////////////////////////////////////////////////////////
 RenderManager::RenderManager(GLApp * pApp)
 :	m_pApp(pApp),
@@ -842,11 +844,22 @@ void RenderManager::CreateAppendBuffers(int iWidth, int iHeight)
     glBindTexture(GL_TEXTURE_BUFFER_ARB, m_globalbuffer[1]);    
     glTexBuffer(GL_TEXTURE_BUFFER_ARB, GL_RGBA32UI, m_linkedListBuffer);      
 
+#ifdef USE_ATOMIC_COUNTER
 	glGenBuffers(1,&m_atomicCounter);
 	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER_EXT, m_atomicCounter);
 	glBufferData(GL_ATOMIC_COUNTER_BUFFER_EXT, 32, NULL, GL_DYNAMIC_DRAW);
 	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER_EXT, 0, m_atomicCounter);
-//    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+#else
+    glGenTextures(1, &m_atomicCounter);
+    glBindTexture(GL_TEXTURE_2D, m_atomicCounter);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R32UI,  1, 1, 0, GL_RED_INTEGER_EXT, GL_UNSIGNED_INT, NULL);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindImageTextureEXT(2,  m_atomicCounter, 0, GL_TRUE, 0, GL_READ_WRITE, GL_R32UI);
+#endif
 
 	glBindImageTextureEXT(0,  m_globalbuffer[0], 0, GL_TRUE, 0, GL_READ_WRITE, GL_R32UI);
 	glBindImageTextureEXT(1,  m_globalbuffer[1], 0, GL_TRUE, 0, GL_READ_WRITE, GL_RGBA32UI);
@@ -869,7 +882,6 @@ void RenderManager::ResizeAppendBuffers(int iWidth, int iHeight)
     glBindTexture(GL_TEXTURE_BUFFER_ARB, m_globalbuffer[1]);    
     glTexBuffer(GL_TEXTURE_BUFFER_ARB, GL_RGBA32UI, m_linkedListBuffer);      
 
-//    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	CheckOglError();
 }
 
@@ -883,7 +895,11 @@ void RenderManager::DeleteAppendBuffers()
 	}
 	if (m_atomicCounter > 0)
 	{
+#ifdef USE_ATOMIC_COUNTER
 		glDeleteBuffers(1, &m_atomicCounter);
+#else
+		glDeleteTextures(1, &m_atomicCounter);
+#endif
 		m_atomicCounter = 0;
 	}
 	if (m_globalbuffer > 0)
@@ -899,18 +915,18 @@ void RenderManager::ClearAppendBuffers()
 {
 	static GLuint ZeroMem = 0;
 
-	GetGpuParams()->SetParam(UniformName::startOffsetBuffer, 0);
-	GetGpuParams()->SetParam(UniformName::linkedListBuffer, 1);
-
 	bool bShader = EnableShader(AppendClear);
 
 	glBindTexture(GL_TEXTURE_2D, GetApp()->m_texBackground);
 
 	DrawScreenQuadDirect();
 
-	glMemoryBarrierEXT(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT_EXT);
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+#ifdef USE_ATOMIC_COUNTER
+	glMemoryBarrierEXT(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT_EXT);
 	glBufferSubData(GL_ATOMIC_COUNTER_BUFFER_EXT, 0, sizeof(GLuint), &ZeroMem);
+#endif
 
 	CheckOglError();
 }
@@ -918,7 +934,9 @@ void RenderManager::ClearAppendBuffers()
 //////////////////////////////////////////////////////////////////////////////////////
 void RenderManager::ResolveAppendBuffers()
 {
+#ifdef USE_ATOMIC_COUNTER
 	glMemoryBarrierEXT(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT_EXT);
+#endif
 
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	bool bShader = EnableShader(AppendResolve);

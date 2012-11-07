@@ -9,10 +9,6 @@ class GLApp;
 
 
 #define MAX_SORTED_FRAGMENT 20
-#define GL_ATOMIC_COUNTER_BUFFER_EXT                       0x92C0
-#define GL_SHADER_IMAGE_ACCESS_BARRIER_BIT_EXT             0x00000020
-
-typedef GLvoid* (APIENTRY *PFNGLMAPBUFFERRANGEPROC) (GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
 
 enum renderToTargetNature_e
 { 

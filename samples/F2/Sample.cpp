@@ -122,8 +122,6 @@ bool GLSample::Initialize()
 	m_texNoise = CreateTexture2D("data/Noise.tga");
 
 	SetUniform(envMapCube, 3);	// has to be set even if not evaluated... or error while rendering geom
-	SetUniform(startOffsetBuffer, 0);
-	SetUniform(linkedListBuffer, 1);
 
 	fullModel = new ModelAndTextureLoader("data/models/F40/","data/models/F40/F40.obj"); 
 	//fullModel = new ModelAndTextureLoader("data/models/dragon2/","data/models/dragon2/dragon2.obj"); 

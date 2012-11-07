@@ -1,13 +1,18 @@
 #version 420 core
+//#define USE_ATOMIC_COUNTER
 #extension GL_EXT_gpu_shader4 : enable
 #extension GL_EXT_shader_image_load_store : enable
 
 precision highp float;
 
-layout(r32ui) uniform uimage2D startOffsetBuffer;
-layout(rgba32ui) uniform uimageBuffer linkedListBuffer;
+layout(r32ui, binding = 0) uniform coherent uimage2D startOffsetBuffer;
+layout(rgba32ui, binding = 1) uniform coherent uimageBuffer linkedListBuffer;
 
-layout(binding=0, offset=0) uniform atomic_uint id1;
+#ifdef USE_ATOMIC_COUNTER
+layout(binding = 0, offset = 0) uniform atomic_uint id1;
+#else
+layout (r32ui, binding = 2) uniform coherent uimage2D atomicBuff; 
+#endif
 
 
 in vec3 v_normal;
@@ -160,7 +165,11 @@ void AppendABuffer(vec4 color)
         ivec2 offset = ivec2(gl_FragCoord.xy);
 
         // Retrieve current pixel count and increase counter	
+#ifdef USE_ATOMIC_COUNTER
         uint uPixelCount = atomicCounterIncrement(id1);
+#else
+		uint uPixelCount = imageAtomicAdd(atomicBuff, ivec2(0), 1u); 
+#endif
         	
         // Exchange indices in StartOffsetTexture corresponding to pixel location 
         uint uOldStartOffset = imageAtomicExchange(startOffsetBuffer, offset, uPixelCount);
