@@ -521,7 +521,6 @@ void ModelAndTextureLoader_V2::recursiveMeshRendering(const struct aiScene *sc, 
 		if(CurrentMat.ambiant!=glm::vec4(ambiant.r,ambiant.g,ambiant.b,ambiant.a) &&
 			CurrentMat.diffuse!=glm::vec4(diffuse.r,diffuse.g,diffuse.b,diffuse.a))
 		{
-
 			glBindBuffer(GL_UNIFORM_BUFFER, BufferName[buffer::UNIFORM_MATERIAL]);
 			MATERIAL* uniformBufferMaterial = (MATERIAL*)glMapBufferRange(
 				GL_UNIFORM_BUFFER, 0, sizeof(MATERIAL),
