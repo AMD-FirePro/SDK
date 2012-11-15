@@ -13,6 +13,6 @@ out vec3 vRightCoords;
 void main()
 {
 	gl_Position = vec4(position,1.0);
-	vLeftCoords   = vec3(texCoord,-1.0);
-	vRightCoords  = vec3(texCoord,1.0); 
+	vLeftCoords = vec3(texCoord,-1.0);
+	vRightCoords = vec3(texCoord,1.0); 
 }
