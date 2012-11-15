@@ -98,7 +98,8 @@ void GLSample::SetDebug()
 	else
 	{
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
-		glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+		// too many low priority log on NIVIDA, filter severity here
+		glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_MEDIUM_ARB, 0, NULL, GL_TRUE);
 		glDebugMessageCallbackARB(debugOutput, NULL);
 	}
 
@@ -121,12 +122,14 @@ bool GLSample::Initialize()
 	m_texNoise = CreateTexture2D("data/Noise.tga");
 
 	SetUniform(envMapCube, 3);	// has to be set even if not evaluated... or error while rendering geom
-	SetUniform(startOffsetBuffer, 0);
-	SetUniform(linkedListBuffer, 1);
 
 	fullModel = new ModelAndTextureLoader("data/models/F40/","data/models/F40/F40.obj"); 
-	SetModelSize(fullModel->GetSize());
-	SetModelCenter(fullModel->GetCenter());
+	//fullModel = new ModelAndTextureLoader("data/models/dragon2/","data/models/dragon2/dragon2.obj"); 
+	if (fullModel)
+	{
+		SetModelSize(fullModel->GetSize());
+		SetModelCenter(fullModel->GetCenter());
+	}
 
 	return CheckOglError();
 }

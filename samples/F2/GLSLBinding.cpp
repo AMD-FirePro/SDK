@@ -60,9 +60,6 @@ const char * SemanticName[maxUniform] =
 	"reflectionBumpiness",
 	"level",
 
-	"startOffsetBuffer",
-	"linkedListBuffer",
-
 	"matModelView",
 	"matModelViewProj",
 	"matNormal",
