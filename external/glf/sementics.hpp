@@ -29,7 +29,8 @@ namespace semantic
 		{
 			POSITION = 0,
 			COLOR	 = 3,
-			TEXCOORD = 4
+			TEXCOORD = 4,
+			DRAW_ID  = 5
 		};
 	}//namespace attr
 
