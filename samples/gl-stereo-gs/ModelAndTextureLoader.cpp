@@ -1,12 +1,12 @@
 #include "ModelAndTextureLoader.hpp"
 #include <GL/glew.h>
-#include <assimp\config.h>
-#include <assimp\vector3.h>
-#include <assimp\matrix4x4.h>
+#include <assimp/config.h>
+#include <assimp/vector3.h>
+#include <assimp/matrix4x4.h>
 
 #include <gli/gli.hpp>
 #include <gli/gtx/loader.hpp>
-
+#include <gli/gtx/gl_texture2d.hpp>
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelAndTextureLoader::get_bounding_box_for_node (const  aiNode* nd, 
