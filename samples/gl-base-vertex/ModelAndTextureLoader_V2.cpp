@@ -1,4 +1,5 @@
 #include "ModelAndTextureLoader_V2.hpp"
+#include <gli/gtx/gl_texture2d.hpp>
 
 namespace gli{
 namespace detail

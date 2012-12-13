@@ -1,8 +1,5 @@
-
 #include <glf/glf.hpp>
-
 #include "ModelAndTextureLoader.hpp"
-
 
 namespace MySemantic
 {
@@ -102,8 +99,12 @@ bool initProgram()
 
 	if(Validated)
 	{
-		GLuint VertShaderName = amd::createShader(GL_VERTEX_SHADER, VERT_SHADER_SOURCE);
-		GLuint FragShaderName = amd::createShader(GL_FRAGMENT_SHADER, FRAG_SHADER_SOURCE);
+		amd::compiler Compiler;
+		GLuint VertShaderName = Compiler.create(GL_VERTEX_SHADER, 
+			VERT_SHADER_SOURCE, "--version 420 --profile core");
+		GLuint FragShaderName = Compiler.create(GL_FRAGMENT_SHADER, 
+			FRAG_SHADER_SOURCE, "--version 420 --profile core");
+		Validated = Validated && Compiler.check();
 
 		ProgramName[program::VERTEX_SHADER] = glCreateProgram();
 		glProgramParameteri(ProgramName[program::VERTEX_SHADER], GL_PROGRAM_SEPARABLE, GL_TRUE);
@@ -155,7 +156,6 @@ bool initDebugOutput()
 
 bool initBuffer()
 {
-
 	glGenBuffers(buffer::MAX, BufferName);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, BufferName[buffer::UNIFORM_UPDATE_EACH_FRAME]);
@@ -202,8 +202,6 @@ bool end()
 
 	return Validated;
 }
-
-
 
 void recursiveMeshRendering(const struct aiScene *sc, const struct aiNode* nd, unsigned int* currentMesh)
 {

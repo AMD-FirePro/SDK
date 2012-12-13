@@ -185,27 +185,7 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 			std::string filename = (*itr).first;
 			(*itr).second = &m_textureIds[i];
 
-			gli::texture2D textureFileLoaded = gli::load(std::string(TextureDirectory) + filename);
-			assert(!textureFileLoaded.empty());
-
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, m_textureIds[i]);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			gli::texture2D::format_type formatImage = textureFileLoaded.format();
-
-			GLsizei dimX = textureFileLoaded[0].dimensions().x;
-			GLsizei dimY = textureFileLoaded[0].dimensions().y;
-
-			if ( formatImage == gli::RGB8U )
-			{
-				glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,dimX,dimY,0,GL_RGB,GL_UNSIGNED_BYTE,textureFileLoaded[0].data());
-			}
-			else if ( formatImage == gli::RGBA8U )
-			{
-				glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,dimX,dimY,0,GL_RGBA,GL_UNSIGNED_BYTE,textureFileLoaded[0].data());
-			}
-			glBindTexture(GL_TEXTURE_2D, 0);
-
+			m_textureIds[i] = gli::createTexture2D(std::string(TextureDirectory) + filename);
 
 			itr++;
 		}
