@@ -341,7 +341,7 @@ namespace amd
  
 			if(type == GL_DEBUG_TYPE_ERROR_ARB)
 			{
-				//assert(0);
+				assert(0);
 				strcpy(debType, "error");
 			}
 			else if(type == GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB)

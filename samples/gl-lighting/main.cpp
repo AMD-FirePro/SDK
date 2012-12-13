@@ -126,6 +126,8 @@ bool initProgram()
 		glUseProgramStages(PipelineName, GL_FRAGMENT_SHADER_BIT, ProgramName[program::FRAGMENT_SHADER]);
 	}
 
+	assert(Validated);
+
 	return Validated;
 }
 
