@@ -109,6 +109,8 @@ namespace glf
 		std::string Result;
 		
 		std::ifstream Stream(Filename);
+		assert(Stream.is_open());
+
 		if(!Stream.is_open())
 			return Result;
 

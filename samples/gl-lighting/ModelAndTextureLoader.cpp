@@ -198,11 +198,11 @@ ModelAndTextureLoader::ModelAndTextureLoader(const char* TextureDirectory,const 
 
 			if ( formatImage == gli::RGB8U )
 			{
-				glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,dimX,dimY,0,GL_RGB,GL_UNSIGNED_BYTE,textureFileLoaded[0].data());
+				glTexImage2D(GL_TEXTURE_2D,0,GL_RGB8,dimX,dimY,0,GL_RGB,GL_UNSIGNED_BYTE,textureFileLoaded[0].data());
 			}
 			else if ( formatImage == gli::RGBA8U )
 			{
-				glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,dimX,dimY,0,GL_RGBA,GL_UNSIGNED_BYTE,textureFileLoaded[0].data());
+				glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,dimX,dimY,0,GL_RGBA,GL_UNSIGNED_BYTE,textureFileLoaded[0].data());
 			}
 			glBindTexture(GL_TEXTURE_2D, 0);
 

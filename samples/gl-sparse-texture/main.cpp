@@ -99,9 +99,9 @@ bool initProgram()
 	{
 		amd::compiler Compiler;
 		GLuint VertShaderName = Compiler.create(GL_VERTEX_SHADER, 
-			"--version 420 --profile core", VERT_SHADER_SOURCE);
+			VERT_SHADER_SOURCE, "--version 420 --profile core");
 		GLuint FragShaderName = Compiler.create(GL_FRAGMENT_SHADER, 
-			"--version 420 --profile core", FRAG_SHADER_SOURCE);
+			FRAG_SHADER_SOURCE, "--version 420 --profile core");
 
 		Validated = Validated && Compiler.check();
 
